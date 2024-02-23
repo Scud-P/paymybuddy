@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Connection</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">PayMyBuddy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/transfer}">Transfer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/profile}">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/contact}">Contact</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/login}">Log In</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <div th:if="${session.user != null}">
+        <p>Welcome, <span th:text="${session.user.firstName}"></span>!</p>
+        <p>Here's where you can add a buddy's email address to send him money.</p>
+        <p>Fill out the form below and click on submit.</p>
+
+        <form method="post" th:action="@{/addConnection}">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>Enter your buddy's email address</td>
+                    <td><input type="email" name="email"/></td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="cta-button">Submit</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

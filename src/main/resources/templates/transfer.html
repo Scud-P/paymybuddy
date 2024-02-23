@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Transfer</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">PayMyBuddy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/transfer}">Transfer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/profile}">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/contact}">Contact</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/login}">Log In</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="band"></div>
+
+<div class="greyFrame p-3">
+    <h2>Send Money</h2>
+    <button class="cta-button mb-3"> <a th:href="@{/connections}"> Add connection</a> </button>
+    <form action="/submitTransaction" method="post">
+        <select class="dropdown" name="selectedEmail">
+            <option th:each="email : ${emails}" th:value="${email}" th:text="${email}">No connection found!</option>
+        </select>
+        <input type="number" class="monetaryInput" step="1" placeholder="Enter amount in $" name="amount">
+        <div class="form-group row p-3">
+            <input type="text" class="form-control col-7" placeholder="Describe the reason for this transfer" name="description">
+        </div>
+        <button type="submit" class="payButton ">Pay</button>
+    </form>
+</div>
+
+
+<div class="sendMoney p-3">
+    <h2>My Transactions</h2>
+</div>
+
+<div class="table-container p-3">
+    <table>
+        <thead>
+        <tr>
+            <th>Connection</th>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.connectionFirstName}"></td>
+            <td th:text="${transaction.description}"></td>
+            <td th:text="${transaction.amount}"></td>
+        </tbody>
+    </table>
+</div>
+
+<!--<div class="pagination-container">-->
+<!--    <ul class="pagination">-->
+<!--        <li class="page-item" th:if="${transactions.hasPrevious()}">-->
+<!--            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}}?${transactions.previousPageable().pageParameterName}=${transactions.previousPageable().pageNumber}&${transactions.previousPageable().sizeParameterName}=${transactions.previousPageable().pageSize}">Previous</a>-->
+<!--        </li>-->
+<!--        <li class="page-item" th:each="page : ${transactions.pageNumbers}">-->
+<!--            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}}?${transactions.pageable.pageParameterName}=${page}&${transactions.pageable.sizeParameterName}=${transactions.pageable.pageSize}" th:text="${page}"></a>-->
+<!--        </li>-->
+<!--        <li class="page-item" th:if="${transactions.hasNext()}">-->
+<!--            <a class="page-link" th:href="@{${#httpServletRequest.requestURI}}?${transactions.nextPageable().pageParameterName}=${transactions.nextPageable().pageNumber}&${transactions.nextPageable().sizeParameterName}=${transactions.nextPageable().pageSize}">Next</a>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+<footer>
+    <p>&copy; 2024 Pay My Buddy</p>
+</footer>
+</body>
+
+</html>
