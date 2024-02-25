@@ -1,5 +1,6 @@
 package com.oc.paymybuddy.model;
 
+import com.oc.paymybuddy.model.DTO.TransactionDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 

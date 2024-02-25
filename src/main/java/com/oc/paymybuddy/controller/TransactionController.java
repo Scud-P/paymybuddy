@@ -1,7 +1,6 @@
 package com.oc.paymybuddy.controller;
 
 import com.oc.paymybuddy.model.DTO.TransactionDTO;
-import com.oc.paymybuddy.model.Transaction;
 import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.service.PartnershipService;
 import com.oc.paymybuddy.service.TransactionService;
@@ -11,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +37,10 @@ public class TransactionController {
 
 
     @GetMapping("/transfer")
-    public ModelAndView transfer(HttpSession session, Pageable pageable) {
+    public ModelAndView transfer(HttpSession session,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "3") int size) {
+
         User currentUser = (User) session.getAttribute("user");
 
         if (currentUser == null) {
@@ -45,21 +49,18 @@ public class TransactionController {
 
         long senderUserId = currentUser.getUserId();
 
-        Page<Transaction> transactionPage = transactionService.getRecentTransactionsBySenderUserID(senderUserId, pageable);
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<TransactionDTO> transactionDTOs = transactionPage.getContent().stream()
-                .map(transaction -> {
-                    User receiver = userService.findById(transaction.getReceiverUserId());
-                    return new TransactionDTO(transaction, receiver);
-                })
-                .toList();
+        Page<TransactionDTO> transactionPage = transactionService.getRecentTransactionsDTOBySenderUserID(senderUserId, pageable);
 
         List<String> emails = partnershipService.getEmailsFromPartners(senderUserId);
 
         ModelAndView modelAndView = new ModelAndView("transfer");
         modelAndView.addObject("emails", emails);
         modelAndView.addObject("currentUser", currentUser);
-        modelAndView.addObject("transactions", transactionDTOs);
+        modelAndView.addObject("transactions", transactionPage.getContent());
+        modelAndView.addObject("currentPage", transactionPage.getNumber());
+        modelAndView.addObject("totalPages", transactionPage.getTotalPages());
 
         return modelAndView;
     }

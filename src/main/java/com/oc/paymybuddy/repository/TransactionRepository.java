@@ -14,4 +14,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("SELECT t FROM Transaction t WHERE t.senderUserId = :senderUserId ORDER BY t.timestamp DESC")
     Page<Transaction> findRecentBySenderUserId(long senderUserId, Pageable pageable);
+
 }

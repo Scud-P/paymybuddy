@@ -7,14 +7,14 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
     <a class="navbar-brand" href="#">PayMyBuddy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav ml-auto"> <!-- Use ml-auto to push items to the right -->
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
@@ -36,12 +36,14 @@
 
 <main>
     <section>
+        <div class="index p-3">
         <h2>Pay My Buddy</h2>
         <p>We make your money move as you groove!</p>
+        </div>
     </section>
 </main>
 
-<div class="steps">
+<div class="steps p-3">
     <h3>You are only three little steps away!</h3>
     <ol>
         <li>Create an account</li>
@@ -50,7 +52,7 @@
     </ol>
 </div>
 
-<button class="cta-button"> <a th:href="@{/signup}"> Sign up</a> </button>
+<button class="cta-button ml-3"> <a th:href="@{/signup}"> Sign up</a> </button>
 
 </body>
 </html>
