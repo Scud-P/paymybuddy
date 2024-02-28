@@ -40,7 +40,7 @@ public class MockDBService {
 
     private static final Logger logger = LoggerFactory.getLogger(MockDBService.class);
 
-    // Autoincrement must be reset manually before starting the application because of foreign key constraints
+    // User table must be populated first due to other tables using foreign keys
     @PostConstruct
     public void populateMockDB() {
         populateMockUserTable();
@@ -55,7 +55,9 @@ public class MockDBService {
         transactionRepository.deleteAll();
         userRepository.deleteAll();
         logger.info("Mock database cleared successfully.");
-
+        userRepository.resetAutoIncrement();
+        transactionRepository.resetAutoIncrement();
+        logger.info("Auto incremented fields reset successfully");
     }
 
     public void populateMockUserTable() {
@@ -176,6 +178,3 @@ public class MockDBService {
         logger.info("List of mock relationships added: {}", mockPartnerships);
     }
 }
-
-//TODO
-// Handle exception

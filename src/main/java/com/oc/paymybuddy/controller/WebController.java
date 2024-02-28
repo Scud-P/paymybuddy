@@ -28,12 +28,6 @@ public class WebController {
         return "connections";
     }
 
-//    @GetMapping("/transfer")
-//    public String getTransfer() {
-//        System.out.println("Navigating to transfer page");
-//        return "transfer";
-//    }
-
     @GetMapping("/profile")
     public String getProfile() {
         return "profile";

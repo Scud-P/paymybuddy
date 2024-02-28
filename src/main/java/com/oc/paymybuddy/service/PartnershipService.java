@@ -5,6 +5,7 @@ import com.oc.paymybuddy.model.PartnershipID;
 import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.repository.PartnershipRepository;
 import com.oc.paymybuddy.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +25,26 @@ public class PartnershipService {
     @Autowired
     public PartnershipRepository partnershipRepository;
 
-    @Transactional
-    public Partnership addPartnership(User user, String partnerEmail) {
+    public boolean isAPartner(Long senderId, String partnerEmail) {
+        List<String> partnersEmails = getEmailsFromPartners(senderId);
+        return partnersEmails.contains(partnerEmail);
+    }
 
-        User partner  = userRepository.findByEmail(partnerEmail);
+    @Transactional
+    public Partnership addPartnership(User currentUser, String partnerEmail) {
+
+        User partner = userRepository.findByEmail(partnerEmail);
 
         Partnership partnership = new Partnership();
         PartnershipID partnershipID = new PartnershipID();
-        partnershipID.setSenderId(user.getUserId());
+        partnershipID.setSenderId(currentUser.getUserId());
         partnershipID.setReceiverId(partner.getUserId());
         partnership.setId(partnershipID);
 
-        logger.info("User with userID {} added partner with userID {}", user.getUserId(), partner.getUserId());
+        logger.info("User with userID {} added partner with userID {}", currentUser.getUserId(), partner.getUserId());
         return partnershipRepository.save(partnership);
     }
+
     public List<String> getEmailsFromPartners(Long senderID) {
 
         List<Partnership> partnerships = partnershipRepository.findByIdSenderId(senderID);
@@ -46,9 +53,7 @@ public class PartnershipService {
                 .map(partnership -> partnership.getId().getReceiverId())
                 .toList();
 
-        List<String> receiverEmails = userRepository.findEmailsByIds(receiverIds);
-
-        return receiverEmails;
+        return userRepository.findEmailsByIds(receiverIds);
     }
 
 }

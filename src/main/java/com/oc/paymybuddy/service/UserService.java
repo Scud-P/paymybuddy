@@ -32,15 +32,6 @@ public class UserService {
         return user;
     }
 
-    public User saveUser(User user) {
-        User userToAdd = new User();
-        userToAdd.setFirstName(user.getFirstName());
-        userToAdd.setLastName(user.getLastName());
-        userToAdd.setEmail(user.getEmail());
-        userToAdd.setPassword(user.getPassword());
-        return userRepository.save(userToAdd);
-    }
-
     public void deleteUser(User user) {
         userRepository.delete(user);
     }
