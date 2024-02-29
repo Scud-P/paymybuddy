@@ -14,7 +14,6 @@ public class WebController {
 
     @GetMapping("/signup")
     public String getSignup() {
-        System.out.println("Navigating to signup page");
         return "signup";
     }
 
@@ -40,17 +39,16 @@ public class WebController {
 
     @GetMapping("/login")
     public String getLogin() {
-        System.out.println("Navigating to login page");
         return "login";
     }
 
     @GetMapping("/modifyInfo")
-    public String modifyInfo () {
+    public String modifyInfo() {
         return "modifyinfo";
     }
 
     @GetMapping("/buyCredit")
-    public String buyCredit () {
+    public String buyCredit() {
         return "buycredit";
     }
 
