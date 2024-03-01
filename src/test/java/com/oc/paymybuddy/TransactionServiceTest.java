@@ -93,9 +93,6 @@ public class TransactionServiceTest {
 
         long senderUserId = 1;
 
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("userId", senderUserId);
-
         String email = "email";
         String description = "description";
         double amount = 100;
@@ -106,10 +103,10 @@ public class TransactionServiceTest {
 
         when(userService.findByEmail(email)).thenReturn(receiver);
         when(partnershipService.isAPartner(senderUserId, email)).thenReturn(true);
-        when(userService.hasSufficientBalance(session, amount)).thenReturn(true);
+        when(userService.hasSufficientBalance(senderUserId, amount)).thenReturn(true);
 
 
-       Transaction result = transactionService.submitTransaction(session, receiver.getEmail(), amount, description);
+       Transaction result = transactionService.submitTransaction(senderUserId, receiver.getEmail(), amount, description);
 
        assertNotNull(result);
        assertEquals(senderUserId, result.getSenderUserId());
@@ -118,12 +115,10 @@ public class TransactionServiceTest {
        assertEquals(amount, result.getAmount());
 
        verify(transactionRepository, times(1)).save(any(Transaction.class));
-       verify(userService, times(1)).setSenderBalance(session, amount);
+       verify(userService, times(1)).setSenderBalance(senderUserId, amount);
        verify(userService, times(1)).setReceiverBalance(receiver, amount);
        verify(partnershipService, times(1)).isAPartner(senderUserId, email);
-       verify(userService, times(1)).hasSufficientBalance(session, amount);
-
-
+       verify(userService, times(1)).hasSufficientBalance(senderUserId, amount);
 
     }
 

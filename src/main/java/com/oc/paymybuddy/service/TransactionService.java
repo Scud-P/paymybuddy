@@ -35,9 +35,8 @@ public class TransactionService {
 
 
     @Transactional
-    public Transaction submitTransaction(HttpSession session, String partnerEmail, double amount, String description) {
+    public Transaction submitTransaction(long senderUserId, String partnerEmail, double amount, String description) {
 
-        long senderUserId = (long) session.getAttribute("userId");
         User receiver = userService.findByEmail(partnerEmail);
         long receiverUserId = receiver.getUserId();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -49,7 +48,7 @@ public class TransactionService {
         transaction.setDescription(description);
 
         try {
-            userService.setSenderBalance(session, amount);
+            userService.setSenderBalance(senderUserId, amount);
             userService.setReceiverBalance(receiver, amount);
             transactionRepository.save(transaction);
 
@@ -65,7 +64,7 @@ public class TransactionService {
             return null;
         }
 
-        if (!userService.hasSufficientBalance(session, amount)) {
+        if (!userService.hasSufficientBalance(senderUserId, amount)) {
             logger.error("User with ID number [{}] does not have enough funds to initiate a transaction with amount [{}]", senderUserId, amount);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return null;

@@ -79,8 +79,8 @@ public class UserService {
         }
     }
 
-    public void setSenderBalance(HttpSession session, double amount) {
-        User sender = (User) session.getAttribute("user");
+    public void setSenderBalance(long senderUserId, double amount) {
+        User sender = findById(senderUserId);
         double currentBalance = sender.getBalance();
         double newBalance = currentBalance - amount;
         sender.setBalance(newBalance);
@@ -96,8 +96,8 @@ public class UserService {
         userRepository.save(receiver);
     }
 
-    public boolean hasSufficientBalance(HttpSession session, double amount) {
-        User user = (User) session.getAttribute("user");
+    public boolean hasSufficientBalance(long userId, double amount) {
+        User user = findById(userId);
         double currentBalance = user.getBalance();
         return currentBalance >= amount;
     }

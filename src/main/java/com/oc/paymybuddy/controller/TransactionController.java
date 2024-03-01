@@ -72,7 +72,10 @@ public class TransactionController {
             @RequestParam(value = "amount") Double amount,
             @RequestParam(value = "description") String description) {
 
-        transactionService.submitTransaction(session, email, amount, description);
+        long userId = (long) session.getAttribute("userId");
+
+        System.out.println("User ID from session: " + userId);
+        transactionService.submitTransaction(userId, email, amount, description);
 
         return "redirect:/transfer";
     }

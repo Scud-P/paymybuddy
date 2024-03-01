@@ -24,7 +24,7 @@ public class PartnershipController {
 
     @GetMapping("/getPartnerships")
     public String getPartnerships(HttpSession httpSession) {
-        Long userId = (Long) httpSession.getAttribute("userId");
+        long userId = (long) httpSession.getAttribute("userId");
         List<String> emails = partnershipService.getEmailsFromPartners(userId);
         return "emails";
     }

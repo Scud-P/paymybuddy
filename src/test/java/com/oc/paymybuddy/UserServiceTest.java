@@ -5,6 +5,8 @@ import com.oc.paymybuddy.repository.UserRepository;
 import com.oc.paymybuddy.service.MockDBService;
 import com.oc.paymybuddy.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -29,59 +31,43 @@ public class UserServiceTest {
     @MockBean
     public MockDBService mockDBService;
 
-    @Test
-    public void saveUserWithBasicInfoTest() {
+    private static User testUser;
 
+    @BeforeEach
+    public void createTestUser() {
         String firstName = "Bob";
         String lastName = "Ross";
         String email = "bobross@gmail.com";
         String password = "12345";
+        double balance = 0;
+        long userId = 0L;
 
-        User bobRoss = new User();
-        bobRoss.setFirstName(firstName);
-        bobRoss.setLastName(lastName);
-        bobRoss.setEmail(email);
-        bobRoss.setPassword(password);
+        testUser = new User();
+        testUser.setFirstName(firstName);
+        testUser.setLastName(lastName);
+        testUser.setEmail(email);
+        testUser.setBalance(balance);
+        testUser.setPassword(password);
+        testUser.setUserId(userId);
+    }
 
-        userService.saveUserWithBasicInfo(firstName, lastName, email, password);
-
-        verify(userRepository, times(1)).save(bobRoss);
+    @Test
+    public void saveUserWithBasicInfoTest() {
+        userService.saveUserWithBasicInfo(testUser.getFirstName(), testUser.getLastName(), testUser.getEmail(), testUser.getPassword());
+        verify(userRepository, times(1)).save(testUser);
     }
 
     @Test
     public void findByEmail() {
-
-        String firstName = "Bob";
-        String lastName = "Ross";
         String email = "bobross@gmail.com";
-        String password = "12345";
-
-        User bobRoss = new User();
-        bobRoss.setFirstName(firstName);
-        bobRoss.setLastName(lastName);
-        bobRoss.setEmail(email);
-        bobRoss.setPassword(password);
-
-        when(userRepository.findByEmail(email)).thenReturn(bobRoss);
-
+        when(userRepository.findByEmail(email)).thenReturn(testUser);
         User result = userService.findByEmail(email);
 
-        assertEquals(result, bobRoss);
+        assertEquals(result, testUser);
     }
 
     @Test
     public void modifyUserInfo() {
-
-        String firstName = "Bob";
-        String lastName = "Ross";
-        String email = "bobross@gmail.com";
-        String password = "12345";
-
-        User bobRoss = new User();
-        bobRoss.setFirstName(firstName);
-        bobRoss.setLastName(lastName);
-        bobRoss.setEmail(email);
-        bobRoss.setPassword(password);
 
         String modifiedFirstName = "John";
         String modifiedLastName = "Lennon";
@@ -94,59 +80,44 @@ public class UserServiceTest {
         modifiedBobRoss.setEmail(modifiedEmail);
         modifiedBobRoss.setPassword(modifiedPassword);
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(bobRoss));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
 
         userService.modifyUserInfo(modifiedBobRoss);
 
-        verify(userRepository, times(1)).saveAndFlush(bobRoss);
-
+        verify(userRepository, times(1)).saveAndFlush(testUser);
     }
 
     @Test
     public void buyCredit() {
-
-        String firstName = "Bob";
-        String lastName = "Ross";
-        String email = "bobross@gmail.com";
-        String password = "12345";
-
-        User bobRoss = new User();
-        bobRoss.setFirstName(firstName);
-        bobRoss.setLastName(lastName);
-        bobRoss.setEmail(email);
-        bobRoss.setPassword(password);
-        bobRoss.setBalance(0);
-
         double purchasedCredit = 1000.50;
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(bobRoss));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
 
-        userService.buyCredit(bobRoss, purchasedCredit);
+        userService.buyCredit(testUser, purchasedCredit);
 
-        verify(userRepository, times(1)).save(bobRoss);
-
-        assertEquals(1000.50, bobRoss.getBalance());
+        verify(userRepository, times(1)).save(testUser);
+        assertEquals(1000.50, testUser.getBalance());
     }
 
     @Test
     public void setSenderBalance() {
 
-        double initialBalance = 1000.0;
+        when(userRepository.findById(testUser.getUserId())).thenReturn(Optional.of(testUser));
+
+        double initialBalance = testUser.getBalance();
         double amount = 100.0;
         double newBalance = initialBalance - amount;
 
-        User sender = new User();
-        sender.setBalance(initialBalance);
-
         HttpSession session = new MockHttpSession();
-        session.setAttribute("user", sender);
+        session.setAttribute("user", testUser);
+        session.setAttribute("userId", testUser.getUserId());
 
-        userService.setSenderBalance(session, amount);
+        userService.setSenderBalance(testUser.getUserId(), amount);
 
         session.setAttribute("balance", newBalance);
 
-        assertEquals(newBalance, sender.getBalance(), 0.0);
-        verify(userRepository, times(1)).save(sender);
+        assertEquals(newBalance, testUser.getBalance(), 0.0);
+        verify(userRepository, times(1)).save(testUser);
         assertEquals(newBalance, session.getAttribute("balance"));
     }
 
@@ -169,15 +140,13 @@ public class UserServiceTest {
     @Test
     public void hasSufficientBalance() {
 
-        double amount = 500.0;
+        when(userRepository.findById(testUser.getUserId())).thenReturn(Optional.of(testUser));
 
-        User bobRoss = new User();
-        bobRoss.setBalance(1000.0);
+        testUser.setBalance(100.0);
 
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("user", bobRoss);
+        double amount = 50.0;
 
-        boolean result = userService.hasSufficientBalance(session, amount);
+        boolean result = userService.hasSufficientBalance(testUser.getUserId(), amount);
 
         assertTrue(result);
     }
@@ -185,18 +154,12 @@ public class UserServiceTest {
     @Test
     public void findById() {
 
-        long bobId = 1;
+        when(userRepository.findById(testUser.getUserId())).thenReturn(Optional.of(testUser));
 
-        User bobRoss = new User();
-        bobRoss.setUserId(bobId);
+        User result = userService.findById(testUser.getUserId());
 
-        when(userRepository.findById(bobId)).thenReturn(Optional.of(bobRoss));
-
-        User result = userService.findById(bobId);
-
-        verify(userRepository, times(1)).findById(bobId);
-        assertEquals(result, bobRoss);
-
+        verify(userRepository, times(1)).findById(testUser.getUserId());
+        assertEquals(result, testUser);
     }
 
 }
