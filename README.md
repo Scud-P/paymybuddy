@@ -2,6 +2,9 @@
 
 ## Diagramme de classe UML
 
+![UML_Class_Diagram](https://github.com/Scud-P/paymybuddy/assets/129103727/66d6757f-fefa-4513-9f3d-c6231d1f7d25)
+
+
 ## Scripts SQL
 
 CREATE DATABASE  IF NOT EXISTS `paymybuddy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
