@@ -4,6 +4,10 @@
 
 ![UML_Class_Diagram](https://github.com/Scud-P/paymybuddy/assets/129103727/66d6757f-fefa-4513-9f3d-c6231d1f7d25)
 
+## Modèle physique de données
+
+![Database](https://github.com/Scud-P/paymybuddy/assets/129103727/7272925f-79cc-4f60-ad4f-7223ad4fe382)
+
 
 ## Scripts SQL
 
