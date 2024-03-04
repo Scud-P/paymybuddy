@@ -1,10 +1,8 @@
-#Openclassrooms
+# Openclassrooms - Parcours de développeur d'applications Java  - Projet 6 
 
-##Parcours de développeur d'applications Java  - Projet 6 
+## Diagramme de classe UML
 
-###Diagramme de classe UML
-
-###Scripts SQL
+## Scripts SQL
 
 CREATE DATABASE  IF NOT EXISTS `paymybuddy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `paymybuddy`;
