@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,14 +71,18 @@ public class TransactionController {
             HttpSession session,
             @RequestParam(value = "selectedEmail") String email,
             @RequestParam(value = "amount") Double amount,
-            @RequestParam(value = "description") String description) {
+            @RequestParam(value = "description") String description,
+            Model model) {
 
-        long userId = (long) session.getAttribute("userId");
+        try {
+            long userId = (long) session.getAttribute("userId");
+            transactionService.submitTransaction(userId, email, amount, description);
+            return "redirect:/transfer";
 
-        System.out.println("User ID from session: " + userId);
-        transactionService.submitTransaction(userId, email, amount, description);
-
-        return "redirect:/transfer";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            logger.error("IllegalArgumentException occurred: {}", e.getMessage());
+            return "error";
+        }
     }
-
 }

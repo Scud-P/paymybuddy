@@ -83,7 +83,7 @@ public class PartnershipServiceTest {
         partnerships.add(partnership1);
         partnerships.add(partnership2);
 
-        when(partnershipRepository.findByIdSenderId(senderId)).thenReturn(partnerships);
+        when(partnershipRepository.findByIdSenderUserId(senderId)).thenReturn(partnerships);
 
         List<String> emails = List.of("email1", "email2");
         List<Long> receiverIds = List.of(2L, 3L);
@@ -92,7 +92,7 @@ public class PartnershipServiceTest {
 
         List<String> result = partnershipService.getEmailsFromPartners(senderId);
 
-        verify(partnershipRepository).findByIdSenderId(senderId);
+        verify(partnershipRepository).findByIdSenderUserId(senderId);
         verify(userRepository).findEmailsByIds(receiverIds);
 
         assertEquals(emails, result);
@@ -111,7 +111,7 @@ public class PartnershipServiceTest {
 
         when(userRepository.findByEmail(partnerEmail)).thenReturn(partner);
 
-        partnershipService.addPartnership(currentUser, partnerEmail);
+        partnershipService.addPartnership(1L, partnerEmail);
 
         verify(partnershipRepository, times(1)).save(any(Partnership.class));
     }

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,10 +27,10 @@ public class UserController {
 
     @PostMapping("/addUser")
     public String addUser(
-    @RequestParam(value = "firstName") String firstName,
-    @RequestParam(value = "lastName") String lastName,
-    @RequestParam(value = "email") String email,
-    @RequestParam(value = "password") String password) {
+            @RequestParam(value = "firstName") String firstName,
+            @RequestParam(value = "lastName") String lastName,
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "password") String password) {
         userService.saveUserWithBasicInfo(firstName, lastName, email, password);
         return "redirect:/login";
     }
@@ -46,7 +47,8 @@ public class UserController {
             @RequestParam(value = "lastName", required = false) String lastName,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "password", required = false) String password,
-            HttpSession session) {
+            HttpSession session,
+            Model model) {
 
         User currentUser = (User) session.getAttribute("user");
         if (currentUser != null) {
@@ -62,8 +64,15 @@ public class UserController {
             if (password != null) {
                 currentUser.setPassword(password);
             }
-            userService.modifyUserInfo(currentUser);
-            session.setAttribute("user", currentUser);
+            try {
+                userService.modifyUserInfo(currentUser);
+                session.setAttribute("user", currentUser);
+
+            } catch (IllegalArgumentException e) {
+                model.addAttribute("errorMessage", e.getMessage());
+                logger.error("Unexpected error occurred: {}", e.getMessage());
+                return "error";
+            }
         }
         return "redirect:/profile";
     }
@@ -81,9 +90,9 @@ public class UserController {
     public String addConnection(
             @RequestParam(value = "email") String email,
             HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
-        partnershipService.addPartnership(currentUser, email);
-        return  "redirect:/transfer";
+        long currentUserId = (long) session.getAttribute("userId");
+        partnershipService.addPartnership(currentUserId, email);
+        return "redirect:/transfer";
     }
 
 }

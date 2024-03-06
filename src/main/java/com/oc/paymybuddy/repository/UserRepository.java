@@ -16,9 +16,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u.email FROM User u WHERE u.userId IN :userIds")
     List<String> findEmailsByIds(@Param("userIds") List<Long> userIds);
 
+    @Query("SELECT u.userId FROM User u WHERE u.email = :email")
+    Long findIdByEmail(@Param("email") String email);
+
+    @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.email = :email")
+    boolean isAlreadyUsedEmail(@Param("email") String email);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE users AUTO_INCREMENT = 1", nativeQuery = true)
     void resetAutoIncrement();
-
 }

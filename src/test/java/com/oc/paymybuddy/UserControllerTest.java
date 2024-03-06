@@ -119,26 +119,25 @@ public class UserControllerTest {
     @Test
     public void testAddConnection() throws Exception {
 
+        long senderUserId = 1L;
+        long receiverUserId = 2L;
+
+
         Partnership partnership = new Partnership();
         PartnershipID partnershipID = new PartnershipID();
-        partnershipID.setSenderId(1);
-        partnershipID.setReceiverId(2);
+        partnershipID.setSenderId(senderUserId);
+        partnershipID.setReceiverId(receiverUserId);
         partnership.setId(partnershipID);
 
         String email = "connectionEmail";
 
-        User currentUser = new User();
-        currentUser.setEmail("email");
-        currentUser.setPassword("password");
-        currentUser.setFirstName("Bob");
-        currentUser.setLastName("Ross");
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("userId", senderUserId);
 
-        HttpSession session = new MockHttpSession();
-        session.setAttribute("user", currentUser);
+        when(partnershipService.addPartnership(2L, email)).thenReturn(partnership);
 
-        when(partnershipService.addPartnership(currentUser, email)).thenReturn(partnership);
 
-        mockMvc.perform(post("/addConnection")
+        mockMvc.perform(post("/addConnection").session(session)
                         .param("email", email))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/transfer"));

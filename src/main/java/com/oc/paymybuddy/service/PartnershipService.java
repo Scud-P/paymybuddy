@@ -2,10 +2,8 @@ package com.oc.paymybuddy.service;
 
 import com.oc.paymybuddy.model.Partnership;
 import com.oc.paymybuddy.model.PartnershipID;
-import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.repository.PartnershipRepository;
 import com.oc.paymybuddy.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,23 +29,36 @@ public class PartnershipService {
     }
 
     @Transactional
-    public Partnership addPartnership(User currentUser, String partnerEmail) {
+    public Partnership addPartnership(long userId, String partnerEmail) {
 
-        User partner = userRepository.findByEmail(partnerEmail);
+        Long partnerId = userRepository.findIdByEmail(partnerEmail);
+
+        if(partnerId == null) {
+            logger.warn("The email address {} does not belong to one of our users", partnerEmail);
+            return null;
+        }
+
+        List<String> partnerEmails = getEmailsFromPartners(userId);
+
+        if(partnerEmails.contains(partnerEmail)) {
+            logger.warn("User with ID {} and email {} is already one of your partners", partnerId, partnerEmail);
+            return null;
+        }
 
         Partnership partnership = new Partnership();
         PartnershipID partnershipID = new PartnershipID();
-        partnershipID.setSenderId(currentUser.getUserId());
-        partnershipID.setReceiverId(partner.getUserId());
+        partnershipID.setSenderId(userId);
+        partnershipID.setReceiverId(partnerId);
         partnership.setId(partnershipID);
 
-        logger.info("User with userID {} added partner with userID {}", currentUser.getUserId(), partner.getUserId());
+        logger.info("User with userID {} added partner with userID {}", userId, partnerId);
         return partnershipRepository.save(partnership);
     }
 
+    @Transactional(readOnly = true)
     public List<String> getEmailsFromPartners(Long senderID) {
 
-        List<Partnership> partnerships = partnershipRepository.findByIdSenderId(senderID);
+        List<Partnership> partnerships = partnershipRepository.findByIdSenderUserId(senderID);
 
         List<Long> receiverIds = partnerships.stream()
                 .map(partnership -> partnership.getId().getReceiverId())

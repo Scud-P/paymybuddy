@@ -36,40 +36,36 @@ public class TransactionService {
 
     @Transactional
     public Transaction submitTransaction(long senderUserId, String partnerEmail, double amount, String description) {
-
-        User receiver = userService.findByEmail(partnerEmail);
-        long receiverUserId = receiver.getUserId();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Transaction transaction = new Transaction();
-        transaction.setSenderUserId(senderUserId);
-        transaction.setReceiverUserId(receiverUserId);
-        transaction.setTimestamp(timestamp);
-        transaction.setAmount(amount);
-        transaction.setDescription(description);
-
         try {
+            User receiver = userService.findByEmail(partnerEmail);
+
+            if (!partnershipService.isAPartner(senderUserId, partnerEmail)) {
+                logger.error("User with email address {} is not a partner of user with ID number {}", partnerEmail, senderUserId);
+                throw new IllegalArgumentException("User with email address " + partnerEmail + " is not a partner of user with ID number " + senderUserId);
+            }
+
+            if (!userService.hasSufficientBalance(senderUserId, amount)) {
+                logger.error("You do not have enough funds to initiate a transaction with amount {} $", amount);
+                throw new IllegalArgumentException("User with ID number " + senderUserId + " does not have enough funds to initiate a transaction with amount" + amount);
+            }
+
             userService.setSenderBalance(senderUserId, amount);
             userService.setReceiverBalance(receiver, amount);
+
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            Transaction transaction = new Transaction();
+            transaction.setSenderUserId(senderUserId);
+            transaction.setReceiverUserId(receiver.getUserId());
+            transaction.setTimestamp(timestamp);
+            transaction.setAmount(amount);
+            transaction.setDescription(description);
             transactionRepository.save(transaction);
+            return transaction;
 
-        } catch (Exception e) {
-            logger.error("An error occurred during transaction processing: {}", e.getMessage());
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return null;
+        } catch (IllegalArgumentException e) {
+            logger.error("An IllegalArgumentException occurred during transaction processing: {}", e.getMessage());
+            throw e;
         }
-
-        if (!partnershipService.isAPartner(senderUserId, partnerEmail)) {
-            logger.error("User with email address [{}] is not a partner of user with ID number [{}]", partnerEmail, senderUserId);
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return null;
-        }
-
-        if (!userService.hasSufficientBalance(senderUserId, amount)) {
-            logger.error("User with ID number [{}] does not have enough funds to initiate a transaction with amount [{}]", senderUserId, amount);
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return null;
-        }
-        return transaction;
     }
 
 
@@ -77,7 +73,7 @@ public class TransactionService {
 
         Page<Transaction> transactions = transactionRepository.findRecentBySenderUserId(senderUserId, pageable);
         List<TransactionDTO> transactionDTOS = new ArrayList<>();
-        for(Transaction transaction : transactions.getContent()) {
+        for (Transaction transaction : transactions.getContent()) {
             long receiverUserId = transaction.getReceiverUserId();
             User receiver = userService.findById(receiverUserId);
             TransactionDTO transactionDTO = new TransactionDTO(transaction, receiver);

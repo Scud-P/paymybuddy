@@ -10,26 +10,28 @@ import java.io.Serializable;
 @Embeddable
 public class PartnershipID implements Serializable {
 
-    @Column(name = "user1Id")
-    private long senderId;
+    @Column(name = "sender_user_id")
+    private long senderUserId;
+
+    @Column(name = "receiver_user_id")
+    private long receiverUserId;
 
     public long getSenderId() {
-        return senderId;
+        return senderUserId;
     }
 
     public void setSenderId(long senderId) {
-        this.senderId = senderId;
+        this.senderUserId = senderId;
     }
 
     public long getReceiverId() {
-        return receiverId;
+        return receiverUserId;
     }
 
     public void setReceiverId(long receiverId) {
-        this.receiverId = receiverId;
+        this.receiverUserId = receiverId;
     }
 
-    @Column(name = "user2Id")
-    private long receiverId;
+
 
 }

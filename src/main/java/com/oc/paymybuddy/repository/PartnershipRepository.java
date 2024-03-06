@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PartnershipRepository extends JpaRepository<Partnership, PartnershipID> {
 
-    List<Partnership> findByIdSenderId(long senderId);
+    List<Partnership> findByIdSenderUserId(long senderUserId);
 
 }

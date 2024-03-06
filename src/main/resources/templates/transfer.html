@@ -9,7 +9,8 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
     <a class="navbar-brand" href="#">PayMyBuddy</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -39,7 +40,7 @@
 <div class="transferPanel p-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Send Money</h2>
-        <button class="cta-button ml-auto"> <a th:href="@{/connections}"> Add connection</a> </button>
+        <button class="cta-button ml-auto"><a th:href="@{/connections}"> Add connection</a></button>
     </div>
     <form action="/submitTransaction" method="post">
         <select class="dropdown" name="selectedEmail">

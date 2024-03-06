@@ -15,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockHttpSession;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class TransactionServiceTest {
 
         long senderUserId = 1;
 
-        Pageable pageable = PageRequest.of(0,3);
+        Pageable pageable = PageRequest.of(0, 3);
 
         List<Transaction> transactions = new ArrayList<>();
 
@@ -81,7 +83,7 @@ public class TransactionServiceTest {
         when(transactionRepository.findRecentBySenderUserId(anyLong(), eq(pageable)))
                 .thenReturn(new PageImpl<>(transactions, pageable, transactions.size()));
 
-        Page<TransactionDTO> result =  transactionService.getRecentTransactionsDTOBySenderUserID(senderUserId, pageable);
+        Page<TransactionDTO> result = transactionService.getRecentTransactionsDTOBySenderUserID(senderUserId, pageable);
 
         assertEquals(transactions.size(), result.getContent().size());
         assertTrue(result.getContent().stream().allMatch(Objects::nonNull));
@@ -92,34 +94,63 @@ public class TransactionServiceTest {
     public void testSubmitTransaction() {
 
         long senderUserId = 1;
-
-        String email = "email";
+        String partnerEmail = "email";
         String description = "description";
         double amount = 100;
 
         User receiver = new User();
-        receiver.setEmail(email);
+        receiver.setEmail(partnerEmail);
         receiver.setUserId(2);
+        receiver.setFirstName("John");
+        receiver.setLastName("Lennon");
 
-        when(userService.findByEmail(email)).thenReturn(receiver);
-        when(partnershipService.isAPartner(senderUserId, email)).thenReturn(true);
-        when(userService.hasSufficientBalance(senderUserId, amount)).thenReturn(true);
+        User sender = new User();
+        sender.setUserId(senderUserId);
 
+        when(userService.findByEmail(partnerEmail)).thenReturn(receiver);
 
-       Transaction result = transactionService.submitTransaction(senderUserId, receiver.getEmail(), amount, description);
+        when(partnershipService.isAPartner(anyLong(), anyString())).thenReturn(true);
 
-       assertNotNull(result);
-       assertEquals(senderUserId, result.getSenderUserId());
-       assertEquals(receiver.getUserId(), result.getReceiverUserId());
-       assertEquals(description, result.getDescription());
-       assertEquals(amount, result.getAmount());
+        when(userService.hasSufficientBalance(anyLong(), anyDouble())).thenReturn(true);
 
-       verify(transactionRepository, times(1)).save(any(Transaction.class));
-       verify(userService, times(1)).setSenderBalance(senderUserId, amount);
-       verify(userService, times(1)).setReceiverBalance(receiver, amount);
-       verify(partnershipService, times(1)).isAPartner(senderUserId, email);
-       verify(userService, times(1)).hasSufficientBalance(senderUserId, amount);
+        Transaction result = transactionService.submitTransaction(senderUserId, receiver.getEmail(), amount, description);
 
+        assertNotNull(result);
+        assertEquals(senderUserId, result.getSenderUserId());
+        assertEquals(receiver.getUserId(), result.getReceiverUserId());
+        assertEquals(description, result.getDescription());
+        assertEquals(amount, result.getAmount());
+
+        verify(transactionRepository, times(1)).save(any(Transaction.class));
+        verify(userService, times(1)).setSenderBalance(senderUserId, amount);
+        verify(userService, times(1)).setReceiverBalance(receiver, amount);
+        verify(partnershipService, times(1)).isAPartner(senderUserId, partnerEmail);
+        verify(userService, times(1)).hasSufficientBalance(senderUserId, amount);
     }
 
+    @Test
+    public void testSubmitTransaction_shouldThrowIllegalArgumentException_whenTargetEmailIsNotAPartner() {
+
+        long senderUserId = 1;
+        String partnerEmail = "email";
+        String description = "description";
+        double amount = 100;
+
+        User receiver = new User();
+        receiver.setEmail(partnerEmail);
+        receiver.setUserId(2);
+        receiver.setFirstName("John");
+        receiver.setLastName("Lennon");
+
+        User sender = new User();
+        sender.setUserId(senderUserId);
+
+        when(userService.findByEmail(partnerEmail)).thenReturn(receiver);
+
+        when(partnershipService.isAPartner(anyLong(), anyString())).thenReturn(false);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.submitTransaction(senderUserId, partnerEmail, amount, description);
+        });
+    }
 }
