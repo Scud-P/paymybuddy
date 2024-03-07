@@ -52,16 +52,16 @@ public class UserController {
 
         User currentUser = (User) session.getAttribute("user");
         if (currentUser != null) {
-            if (firstName != null) {
+            if (firstName != null && !firstName.equals(currentUser.getFirstName())) {
                 currentUser.setFirstName(firstName);
             }
-            if (lastName != null) {
+            if (lastName != null && !lastName.equals(currentUser.getLastName())) {
                 currentUser.setLastName(lastName);
             }
-            if (email != null) {
+            if (email != null && !email.equals(currentUser.getEmail())) {
                 currentUser.setEmail(email);
             }
-            if (password != null) {
+            if (password != null && !password.equals(currentUser.getPassword())) {
                 currentUser.setPassword(password);
             }
             try {

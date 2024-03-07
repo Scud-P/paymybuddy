@@ -14,21 +14,30 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto"> <!-- Use ml-auto to push items to the right -->
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" th:href="@{/index}">Home</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" th:if="${session.user != null}">
         <a class="nav-link" th:href="@{/transfer}">Transfer</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item active" th:if="${session.user != null}">
         <a class="nav-link" th:href="@{/profile}">Profile</a>
+      </li>
+      <li class="nav-item active" th:if="${session.user == null}" style="display: none;">
+        <a class="nav-link" th:href="@{/profile}">Profile</a>
+      </li>
+      <li class="nav-item" th:if="${session.user == null}" style="display: none;">
+        <a class="nav-link" th:href="@{/transfer}">Transfer</a>
       </li>
       <li class="nav-item active">
         <a class="nav-link" th:href="@{/contact}">Contact<span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" th:if="${session.user == null}">
         <a class="nav-link" th:href="@{/login}">Log In</a>
+      </li>
+      <li class="nav-item" th:if="${session.user != null}">
+        <a class="nav-link" th:href="@{/logout}">Log Out</a>
       </li>
     </ul>
   </div>
@@ -37,6 +46,11 @@
 <main>
   <div th:if="${session.user != null}">
     <p>Hi <span th:text="${session.user.firstName}"></span>!</p>
+    <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
+    <p>We will get back to you as soon as possible.</p>
+  </div>
+  <div th:if="${session.user == null}">
+    <p>Hi! </p>
     <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
     <p>We will get back to you as soon as possible.</p>
   </div>

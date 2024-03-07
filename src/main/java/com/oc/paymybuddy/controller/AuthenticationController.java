@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 public class AuthenticationController {
 
@@ -25,18 +27,23 @@ public class AuthenticationController {
     private UserService userService;
 
     @PostMapping("/login")
-    public String login(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session) {
+    public String login(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session, RedirectAttributes redirectAttributes) {
+
         User user = userService.findByEmail(email);
-        if(user == null) {
-            return "redirect:/login?error=true";
+
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("error", "No user was found for that email address");
+            return "redirect:/login";
         }
+
         if (user.getPassword().equals(password)) {
             logger.info("User {} is now logged in", user);
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getUserId());
             return "redirect:/profile";
         }
-        return "redirect:/login?error=true";
+        redirectAttributes.addFlashAttribute("error", "Incorrect password");
+        return "redirect:/login";
     }
 
     @GetMapping("/logout")
@@ -47,6 +54,6 @@ public class AuthenticationController {
         }
         session.removeAttribute("user");
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/index";
     }
 }

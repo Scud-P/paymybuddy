@@ -36,13 +36,14 @@ public class UserService {
         return null;
     }
 
-    @Transactional(readOnly = true)
     public User findByEmail(String email) {
         User user = userRepository.findByEmail(email);
         logger.info("User {} found for email {}", user, email);
         return user;
     }
 
+
+    @Transactional
     public void deleteUser(User user) {
         userRepository.delete(user);
     }

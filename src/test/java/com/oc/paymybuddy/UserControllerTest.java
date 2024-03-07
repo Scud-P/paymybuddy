@@ -9,16 +9,22 @@ import com.oc.paymybuddy.service.PartnershipService;
 import com.oc.paymybuddy.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.ui.Model;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+
+
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(UserController.class)
@@ -69,30 +75,75 @@ public class UserControllerTest {
     @Test
     public void testModifyUserInfo() throws Exception {
 
-        User currentUser = new User();
-        currentUser.setEmail("email");
-        currentUser.setPassword("password");
-        currentUser.setFirstName("Bob");
-        currentUser.setLastName("Ross");
+        User currentUser = mock(User.class);
 
-        HttpSession session = new MockHttpSession();
+        MockHttpSession session = new MockHttpSession();
         session.setAttribute("user", currentUser);
 
-        String firstname = "Bobette";
+        String firstName = "Bobette";
         String lastName = "Rossignol";
         String password = "changedPassword";
         String email = "changedEmail";
 
-        when(userService.modifyUserInfo(currentUser)).thenReturn(currentUser);
+        User modifiedUser = new User();
+        modifiedUser.setFirstName(firstName);
+        modifiedUser.setLastName(lastName);
+        modifiedUser.setEmail(email);
+        modifiedUser.setPassword(password);
 
-        mockMvc.perform(post("/submitNewInfo")
-                .param("firstName", firstname)
-                .param("lastName", lastName)
-                .param("email", email)
-                .param("password", password))
+        when(userService.modifyUserInfo(currentUser)).thenReturn(modifiedUser);
+        session.setAttribute("user", modifiedUser);
+
+        mockMvc.perform(post("/submitNewInfo").session(session)
+                        .param("firstName", firstName)
+                        .param("lastName", lastName)
+                        .param("email", email)
+                        .param("password", password))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile"));
     }
+
+    @Test
+    public void testModifyUserInfo_Setters() {
+
+        MockHttpSession session = new MockHttpSession();
+
+        User currentUser = new User();
+        currentUser.setFirstName("Bob");
+        currentUser.setLastName("Ross");
+        currentUser.setEmail("bob@ross.com");
+        currentUser.setPassword("12345");
+
+        session.setAttribute("user", currentUser);
+
+        String firstName = "Bobette";
+        String lastName = "Rossignol";
+        String email = "bobette@rossignol.com";
+        String password = "23456";
+
+        String result = userController.modifyUserInfo(firstName, lastName, email, password, session, null);
+
+        assertEquals("redirect:/profile", result);
+        assertEquals(firstName, currentUser.getFirstName());
+        assertEquals(lastName, currentUser.getLastName());
+        assertEquals(email, currentUser.getEmail());
+        assertEquals(password, currentUser.getPassword());
+        verify(userService, times(1)).modifyUserInfo(currentUser);
+
+    }
+
+    @Test
+    public void testModifyUserInfoCurrentUserNull() throws Exception {
+
+        mockMvc.perform(post("/submitNewInfo")
+                        .param("firstName", "John")
+                        .param("lastName", "Doe")
+                        .param("email", "newEmail@example.com")
+                        .param("password", "newPassword"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/profile"));
+    }
+
 
     @Test
     public void testFinalizePurchase() throws Exception {
@@ -121,7 +172,6 @@ public class UserControllerTest {
 
         long senderUserId = 1L;
         long receiverUserId = 2L;
-
 
         Partnership partnership = new Partnership();
         PartnershipID partnershipID = new PartnershipID();
