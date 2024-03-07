@@ -3,6 +3,8 @@ package com.oc.paymybuddy.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.text.DecimalFormat;
+
 @Entity
 @Table(name="users")
 @Data
@@ -25,6 +27,12 @@ public class User {
     public User() {
 
     }
+
+    public String getFormattedBalance() {
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        return decimalFormat.format(balance);
+    }
+
 }
 
 

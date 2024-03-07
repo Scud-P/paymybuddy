@@ -45,8 +45,8 @@ public class TransactionService {
             }
 
             if (!userService.hasSufficientBalance(senderUserId, amount)) {
-                logger.error("You do not have enough funds to initiate a transaction with amount {} $", amount);
-                throw new IllegalArgumentException("User with ID number " + senderUserId + " does not have enough funds to initiate a transaction with amount" + amount);
+                logger.error("User with ID number {} does not have enough funds to initiate a transaction with amount {} $", senderUserId, amount);
+                throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + amount + "$");
             }
 
             userService.setSenderBalance(senderUserId, amount);

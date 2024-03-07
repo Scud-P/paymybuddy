@@ -9,16 +9,15 @@ public class TransactionDTO {
 
     private String connectionFirstName;
     private String description;
-    private double amount;
+    private String formattedAmount;
 
     public TransactionDTO(Transaction transaction, User receiver) {
         this.connectionFirstName = receiver.getFirstName();
-        this.amount = transaction.getAmount();
+        this.formattedAmount = transaction.getFormattedAmount();
         if (transaction.getDescription() != null) {
             this.description = transaction.getDescription();
         } else {
             this.description = "";
         }
     }
-
 }

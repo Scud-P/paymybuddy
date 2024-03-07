@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 
 @Entity
 @Data
@@ -27,5 +28,14 @@ public class Transaction {
 
     public Transaction() {
 
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getFormattedAmount() {
+        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        return decimalFormat.format(amount);
     }
 }

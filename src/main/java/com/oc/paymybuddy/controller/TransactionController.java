@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class TransactionController {
             @RequestParam(value = "selectedEmail") String email,
             @RequestParam(value = "amount") Double amount,
             @RequestParam(value = "description") String description,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
         try {
             long userId = (long) session.getAttribute("userId");
@@ -80,9 +81,9 @@ public class TransactionController {
             return "redirect:/transfer";
 
         } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
             logger.error("IllegalArgumentException occurred: {}", e.getMessage());
-            return "error";
+            return "redirect:/transfer";
         }
     }
 }

@@ -9,7 +9,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleException(Exception e, Model model) {
-        model.addAttribute("errorMessage", "An unexpected error occurred. Please try again later.");
+        model.addAttribute("errorMessage", "An unexpected error occurred.");
         return "error";
     }
 }
