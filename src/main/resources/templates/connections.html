@@ -53,6 +53,10 @@
             <button type="submit" class="cta-button">Submit</button>
         </form>
     </div>
+    <div th:if="${error}" class="error alert alert-danger text-center my-3">
+        <span class="font-weight-bold">Error: </span>
+        <span th:text="${error}"></span>
+    </div>
 </main>
 </body>
 </html>

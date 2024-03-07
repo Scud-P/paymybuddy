@@ -44,6 +44,7 @@
     </div>
     <form action="/submitTransaction" method="post">
         <select class="dropdown" name="selectedEmail">
+            <option value="" disabled selected>Select one of your connections</option>
             <option th:each="email : ${emails}" th:value="${email}" th:text="${email}">No connection found!</option>
         </select>
         <input type="number" class="monetaryInput" step="0.01" placeholder="Enter amount in $" name="amount">

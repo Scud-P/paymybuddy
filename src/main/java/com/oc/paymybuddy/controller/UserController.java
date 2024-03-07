@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserController {
@@ -89,10 +90,19 @@ public class UserController {
     @PostMapping("/addConnection")
     public String addConnection(
             @RequestParam(value = "email") String email,
-            HttpSession session) {
-        long currentUserId = (long) session.getAttribute("userId");
-        partnershipService.addPartnership(currentUserId, email);
-        return "redirect:/transfer";
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            long currentUserId = (long) session.getAttribute("userId");
+            partnershipService.addPartnership(currentUserId, email);
+            return "redirect:/transfer";
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            logger.error("IllegalArgumentException occurred: {}", e.getMessage());
+            return "redirect:/connections";
+        }
     }
 
 }

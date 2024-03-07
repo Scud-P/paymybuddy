@@ -35,14 +35,14 @@ public class PartnershipService {
 
         if(partnerId == null) {
             logger.warn("The email address {} does not belong to one of our users", partnerEmail);
-            return null;
+            throw new IllegalArgumentException("The email address " + partnerEmail + " does not belong to one of our users.");
         }
 
         List<String> partnerEmails = getEmailsFromPartners(userId);
 
         if(partnerEmails.contains(partnerEmail)) {
-            logger.warn("User with ID {} and email {} is already one of your partners", partnerId, partnerEmail);
-            return null;
+            logger.warn("User with ID {} and email {} is already a connection of user with userId {} ", partnerId, partnerEmail, userId);
+            throw new IllegalArgumentException("The person you are trying to add " + "(" + partnerEmail + ") is already in your buddies list");
         }
 
         Partnership partnership = new Partnership();
@@ -55,7 +55,6 @@ public class PartnershipService {
         return partnershipRepository.save(partnership);
     }
 
-    @Transactional(readOnly = true)
     public List<String> getEmailsFromPartners(Long senderID) {
 
         List<Partnership> partnerships = partnershipRepository.findByIdSenderUserId(senderID);

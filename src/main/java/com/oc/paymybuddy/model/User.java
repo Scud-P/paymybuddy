@@ -30,7 +30,7 @@ public class User {
 
     public String getFormattedBalance() {
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        return decimalFormat.format(balance);
+        return decimalFormat.format(balance) + "$";
     }
 
 }
