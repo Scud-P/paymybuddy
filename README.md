@@ -2,12 +2,11 @@
 
 ## Diagramme de classe UML
 
-![UML_Class_Diagram](https://github.com/Scud-P/paymybuddy/assets/129103727/66d6757f-fefa-4513-9f3d-c6231d1f7d25)
+![UML_Class_Diagram](https://github.com/Scud-P/paymybuddy/assets/129103727/bc150617-8d2e-4781-ae36-7855f63e9019)
 
 ## Modèle physique de données
 
-![Database](https://github.com/Scud-P/paymybuddy/assets/129103727/7272925f-79cc-4f60-ad4f-7223ad4fe382)
-
+![Database](https://github.com/Scud-P/paymybuddy/assets/129103727/894664a5-cbc4-4bb5-8d70-527f24d44382)
 
 ## Scripts SQL
 
