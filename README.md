@@ -8,12 +8,14 @@
 
 ![Database](https://github.com/Scud-P/paymybuddy/assets/129103727/894664a5-cbc4-4bb5-8d70-527f24d44382)
 
-## Scripts SQL
+## Script SQL de création de la base de donnée
 
+```
 CREATE DATABASE IF NOT EXISTS `paymybuddy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `paymybuddy`;
 
 -- Table structure for table `users`
+
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,6 +29,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Table that stores users of the PayMyBuddy App';
 
 -- Table structure for table `partnership`
+
 DROP TABLE IF EXISTS `partnership`;
 CREATE TABLE `partnership` (
   `partnership_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,6 +42,7 @@ CREATE TABLE `partnership` (
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Table structure for table `transaction`
+
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
   `transaction_number` int(11) NOT NULL AUTO_INCREMENT,
@@ -53,5 +57,5 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`receiver_user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
+```
 
