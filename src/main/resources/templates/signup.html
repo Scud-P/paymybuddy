@@ -5,13 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
 
-<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <style>
+        h3 {
+            color: #74D36A;
+            padding: 2px;
+            margin-bottom: 20px
+        }
+
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-top: 20px;
+            flex: 1;
+            min-width: 10%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            flex: 1;
+            min-width: 10%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+    </style>
+
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
+    <a class="navbar-brand" th:href="@{/index}">PayMyBuddy</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" th:if="${session.user != null}">
+                <a class="nav-link" th:href="@{/transfer}">Transfer</a>
+            </li>
+            <li class="nav-item" th:if="${session.user != null}">
+                <a class="nav-link" th:href="@{/profile}">Profile</a>
+            </li>
+            <li class="nav-item" th:if="${session.user == null}" style="display: none;">
+                <a class="nav-link" th:href="@{/profile}">Profile</a>
+            </li>
+            <li class="nav-item" th:if="${session.user == null}" style="display: none;">
+                <a class="nav-link" th:href="@{/transfer}">Transfer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/contact}">Contact</a>
+            </li>
+            <li class="nav-item" th:if="${session.user == null}">
+                <a class="nav-link" th:href="@{/login}">Log In</a>
+            </li>
+            <li class="nav-item" th:if="${session.user != null}">
+                <a class="nav-link" th:href="@{/profile}">Log Out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-5">
     <div class="row">
-        <div class="col-md-12">
-            <div class="border p-4 d-flex flex-column justify-content-center align-items-center">
+        <div class="col-md-4 mx-auto">
+            <div class="border p-4">
+                <div class ="text-center">
+                    <h3>PayMyBuddy</h3>
+                </div>
                 <form action="/addUser" method="post">
                     <div class="form-group">
                         <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
@@ -25,8 +102,14 @@
                     <div class="form-group">
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign up</button>
+                    <div class ="text-center">
+                        <button type="submit" class="cta-button btn-block">Sign up</button>
+                    </div>
                 </form>
+                <div th:if="${error}" class="error alert alert-danger text-center my-3">
+                    <span class="font-weight-bold">Error: </span>
+                    <span th:text="${error}"></span>
+                </div>
             </div>
         </div>
     </div>

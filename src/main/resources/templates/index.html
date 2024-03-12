@@ -5,10 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PayMyBuddy</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+        main h2 {
+            color: #74D36A;
+        }
+        main h3 {
+            color: #74D36A;
+        }
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-left: 3%;
+            margin-top: 20px;
+            flex: 1;
+            min-width: 10%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            margin-left: 20px
+            flex: 1;
+            min-width: 10%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+
+    </style>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
-    <a class="navbar-brand" href="#">PayMyBuddy</a>
+    <a class="navbar-brand" th:href="@{/index}">PayMyBuddy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -16,6 +56,7 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
             <li class="nav-item active">
                 <a class="nav-link" href="#">Home<span class="sr-only">(current)</span></a>
             </li>
@@ -45,29 +86,28 @@
 </nav>
 
 <main>
-    <section>
-        <div class="index p-3">
-        <h2>Pay My Buddy</h2>
-        <p>We make your money move as you groove!</p>
+    <section class="index-section">
+        <div class="index-content">
+            <div class="index-intro p-3">
+                <h2>Pay My Buddy</h2>
+                <p>We make your money move as you groove!</p>
+            </div>
+            <div class="index-signup p-3">
+                <h3>You are only three little steps away!</h3>
+                <ol>
+                    <li>Create an account</li>
+                    <li>Add a buddy</li>
+                    <li>Start sending money!</li>
+                </ol>
+                <button type="button" class="cta-button"><a th:href="@{/signup}">Sign up</a></button>
+            </div>
+            <div class="index-login p-3">
+                <h3>Already have an account?</h3>
+                <button type="button" class="cta-button"><a th:href="@{/login}">Log in</a></button>
+            </div>
         </div>
     </section>
 </main>
-
-<div class="steps p-3">
-    <h3>You are only three little steps away!</h3>
-    <ol>
-        <li>Create an account</li>
-        <li>Add a buddy</li>
-        <li>Start sending money!</li>
-    </ol>
-</div>
-
-<button class="cta-button ml-3"> <a th:href="@{/signup}">Sign up</a> </button>
-
-<div class="login p-3">
-    <h3>Already have an account?</h3>
-    <button class="cta-button"> <a th:href="@{/login}">Log in</a> </button>
-</div>
 
 </body>
 </html>

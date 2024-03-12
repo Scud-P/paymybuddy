@@ -7,15 +7,27 @@ import lombok.Data;
     @Entity
     @Table(name = "partnership")
     public class Partnership {
-        public PartnershipID getId() {
-            return id;
+
+        public Partnership() {
         }
 
-        public void setId(PartnershipID id) {
-            this.id = id;
+        public Partnership(long ownerId, long partnerId) {
+            this.ownerId = ownerId;
+            this.partnerId = partnerId;
         }
 
-        @EmbeddedId
-        private PartnershipID id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "partnership_id")
+        private long partnershipId;
+
+        @Column(name = "owner_id")
+        private long ownerId;
+
+        @Column(name = "partner_id")
+        private long partnerId;
+
+
+
     }
 

@@ -22,7 +22,7 @@ public class TransactionDTOTest {
         TransactionDTO transactionDTO = new TransactionDTO(transaction, receiver);
 
         assertEquals(transactionDTO.getConnectionFirstName(), receiver.getFirstName());
-        assertEquals(transactionDTO.getAmount(), transaction.getAmount());
+        assertEquals(transactionDTO.getFormattedAmount(), transaction.getFormattedAmount());
         assertEquals(transactionDTO.getDescription(), transaction.getDescription());
 
     }

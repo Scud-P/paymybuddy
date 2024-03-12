@@ -5,6 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log in</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+
+        h3 {
+            color: #74D36A;
+            padding: 2px;
+            margin-bottom: 20px
+        }
+
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-top: 20px;
+            flex: 1;
+            min-width: 10%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            flex: 1;
+            min-width: 10%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+    </style>
 </head>
 <body>
 
@@ -18,7 +54,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
+        <a class="nav-link" th:href="@{/index}">Home</a>
       </li>
       <li class="nav-item" th:if="${session.user != null}">
         <a class="nav-link" th:href="@{/transfer}">Transfer</a>
@@ -50,6 +86,9 @@
   <div class="row">
     <div class="col-md-4 mx-auto">
       <div class="border p-4">
+        <div class ="text-center">
+          <h3>PayMyBuddy</h3>
+        </div>
         <form action="/login" method="post">
           <div class="form-group">
             <input type="email" class="form-control" id="email" name="email" placeholder="Email">
@@ -57,7 +96,7 @@
           <div class="form-group">
             <input type="password" class="form-control" id="password" name="password" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Log in</button> <!-- Make button full-width -->
+          <button type="submit" class="btn cta-button btn-block">Log in</button>
         </form>
         <div th:if="${error}" class="error alert alert-danger text-center my-3">
           <span class="font-weight-bold">Error: </span>

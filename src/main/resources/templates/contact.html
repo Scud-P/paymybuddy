@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Profile</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+        .intro-text {
+            margin-top : 10px;
+            margin-left : 10px;
+            padding: 3px
+        }
+
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+  </style>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
@@ -45,15 +58,13 @@
 
 <main>
   <div th:if="${session.user != null}">
-    <p>Hi <span th:text="${session.user.firstName}"></span>!</p>
-    <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
-    <p>We will get back to you as soon as possible.</p>
+    <div class="intro-text">
+      <p>Hi <span th:text="${session.user.firstName}"></span>!</p>
+      <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
+      <p>We will get back to you as soon as possible.</p>
+    </div>
   </div>
-  <div th:if="${session.user == null}">
-    <p>Hi! </p>
-    <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
-    <p>We will get back to you as soon as possible.</p>
-  </div>
+
 </main>
 </body>
 </html>

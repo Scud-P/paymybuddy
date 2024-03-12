@@ -5,6 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Transfer</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        h3 {
+            color: #74D36A;
+            padding: 2px;
+            margin-bottom: 20px
+        }
+
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-top: 10px;
+            min-width: 10%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            min-width: 10%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+
+        .table-striped thead th {
+            background-color: #74D36A;
+            color: white;
+            text-align: center;
+
+        .table-striped th,
+        .table-striped td {
+            text-align: center;
+        }
+
+    </style>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
@@ -40,7 +86,7 @@
 <div class="transferPanel p-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Send Money</h2>
-        <button class="cta-button ml-auto"><a th:href="@{/connections}"> Add connection</a></button>
+        <button class="cta-button"><a th:href="@{/connections}"> Add connection</a></button>
     </div>
     <form action="/submitTransaction" method="post">
         <select class="dropdown" name="selectedEmail">
@@ -49,9 +95,10 @@
         </select>
         <input type="number" class="monetaryInput" step="0.01" placeholder="Enter amount in $" name="amount">
         <div class="form-group row p-3">
-            <input type="text" class="form-control col-7" placeholder="Describe the reason for this transfer" name="description">
+            <input type="text" class="form-control col-7" placeholder="Describe the reason for this transfer"
+                   name="description">
         </div>
-        <button type="submit" class="payButton ">Pay</button>
+        <button type="submit" class="cta-button">Pay</button>
     </form>
     <div th:if="${error}" class="error alert alert-danger text-center my-3">
         <span class="font-weight-bold">Error: </span>
@@ -65,7 +112,7 @@
 </div>
 
 <div class="table-container p-3">
-    <table>
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>Connection</th>

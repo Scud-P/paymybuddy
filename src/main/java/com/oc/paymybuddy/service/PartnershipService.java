@@ -1,7 +1,6 @@
 package com.oc.paymybuddy.service;
 
 import com.oc.paymybuddy.model.Partnership;
-import com.oc.paymybuddy.model.PartnershipID;
 import com.oc.paymybuddy.repository.PartnershipRepository;
 import com.oc.paymybuddy.repository.UserRepository;
 import org.slf4j.Logger;
@@ -46,10 +45,8 @@ public class PartnershipService {
         }
 
         Partnership partnership = new Partnership();
-        PartnershipID partnershipID = new PartnershipID();
-        partnershipID.setSenderId(userId);
-        partnershipID.setReceiverId(partnerId);
-        partnership.setId(partnershipID);
+        partnership.setOwnerId(userId);
+        partnership.setPartnerId(partnerId);
 
         logger.info("User with userID {} added partner with userID {}", userId, partnerId);
         return partnershipRepository.save(partnership);
@@ -57,10 +54,10 @@ public class PartnershipService {
 
     public List<String> getEmailsFromPartners(Long senderID) {
 
-        List<Partnership> partnerships = partnershipRepository.findByIdSenderUserId(senderID);
+        List<Partnership> partnerships = partnershipRepository.findByOwnerId(senderID);
 
         List<Long> receiverIds = partnerships.stream()
-                .map(partnership -> partnership.getId().getReceiverId())
+                .map(Partnership::getPartnerId)
                 .toList();
 
         return userRepository.findEmailsByIds(receiverIds);

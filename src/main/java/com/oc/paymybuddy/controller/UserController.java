@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,9 +30,17 @@ public class UserController {
             @RequestParam(value = "firstName") String firstName,
             @RequestParam(value = "lastName") String lastName,
             @RequestParam(value = "email") String email,
-            @RequestParam(value = "password") String password) {
-        userService.saveUserWithBasicInfo(firstName, lastName, email, password);
-        return "redirect:/login";
+            @RequestParam(value = "password") String password,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.saveUserWithBasicInfo(firstName, lastName, email, password);
+            return "redirect:/login";
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/signup";
+        }
     }
 
     @DeleteMapping("/deleteUser")
@@ -49,33 +56,32 @@ public class UserController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "password", required = false) String password,
             HttpSession session,
-            Model model) {
+            RedirectAttributes redirectAttributes) {
 
-        User currentUser = (User) session.getAttribute("user");
-        if (currentUser != null) {
-            if (firstName != null && !firstName.equals(currentUser.getFirstName())) {
-                currentUser.setFirstName(firstName);
-            }
-            if (lastName != null && !lastName.equals(currentUser.getLastName())) {
-                currentUser.setLastName(lastName);
-            }
-            if (email != null && !email.equals(currentUser.getEmail())) {
-                currentUser.setEmail(email);
-            }
-            if (password != null && !password.equals(currentUser.getPassword())) {
-                currentUser.setPassword(password);
-            }
-            try {
+        try {
+            User currentUser = (User) session.getAttribute("user");
+            if (currentUser != null) {
+                if (firstName != null && !firstName.equals(currentUser.getFirstName())) {
+                    currentUser.setFirstName(firstName);
+                }
+                if (lastName != null && !lastName.equals(currentUser.getLastName())) {
+                    currentUser.setLastName(lastName);
+                }
+                if (email != null && !email.equals(currentUser.getEmail())) {
+                    currentUser.setEmail(email);
+                }
+                if (password != null && !password.equals(currentUser.getPassword())) {
+                    currentUser.setPassword(password);
+                }
                 userService.modifyUserInfo(currentUser);
                 session.setAttribute("user", currentUser);
-
-            } catch (IllegalArgumentException e) {
-                model.addAttribute("errorMessage", e.getMessage());
-                logger.error("Unexpected error occurred: {}", e.getMessage());
-                return "error";
+                return "redirect:/profile";
             }
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/modifyInfo";
         }
-        return "redirect:/profile";
+        return "redirect:/login";
     }
 
     @PostMapping("/finalizePurchase")

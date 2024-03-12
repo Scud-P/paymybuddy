@@ -5,6 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Profile</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+
+        h3 {
+            color: #74D36A;
+            padding: 2px;
+            margin-bottom: 20px
+        }
+
+        .intro-text {
+          margin-top : 10px;
+          margin-left : 10px;
+          padding: 3px
+        }
+
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-left: 20px
+            flex: 1;
+            min-width: 10%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            margin-left: 20px
+            flex: 1;
+            min-width: 10%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+
+        .double-btn {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+    </style>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
@@ -36,9 +88,12 @@
 
 <main>
   <div th:if="${session.user != null}">
-    <p>Welcome, <span th:text="${session.user.firstName}"></span>!</p>
-    <p>Here is where your user information is stored.</p>
-    <p>You can also credit your account in this section.</p>
+    <div class ="intro-text">
+      <p>Welcome, <span th:text="${session.user.firstName}"></span>!</p>
+      <p>Here is where your user information is stored.</p>
+      <p>You can also credit your account in this section.</p>
+    </div>
+
 
     <table class="table">
       <tbody>
@@ -70,8 +125,11 @@
   </div>
 </main>
 
-<button class="cta-button"> <a th:href="@{/modifyInfo}"> Modify user info</a> </button>
-<button class="cta-button"> <a th:href="@{/buyCredit}"> Transfer money to your PayMyBuddy account</a> </button>
+<div class="double-btn">
+  <button class="cta-button"> <a th:href="@{/modifyInfo}">Modify Info</a> </button>
+  <button class="cta-button"> <a th:href="@{/buyCredit}">Buy Credit</a> </button>
+</div>
+
 
 <script>
   function togglePassword() {

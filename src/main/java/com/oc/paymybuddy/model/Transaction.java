@@ -15,6 +15,15 @@ public class Transaction {
     @Id
     @Column (name="transaction_number")
     private long transactionNumber;
+
+    public Transaction(Timestamp timestamp, double amount, String description, long senderUserId, long receiverUserId) {
+        this.timestamp = timestamp;
+        this.amount = amount;
+        this.description = description;
+        this.senderUserId = senderUserId;
+        this.receiverUserId = receiverUserId;
+    }
+
     @Column (name="timestamp")
     private Timestamp timestamp;
     @Column (name="amount")
@@ -36,6 +45,6 @@ public class Transaction {
 
     public String getFormattedAmount() {
         DecimalFormat decimalFormat = new DecimalFormat("#0.00");
-        return decimalFormat.format(amount);
+        return decimalFormat.format(amount) + "$";
     }
 }

@@ -5,6 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Connection</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+
+        .intro-text {
+            margin-top : 10px;
+            margin-left : 10px;
+            padding: 3px
+        }
+
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-top: 20px;
+            flex: 1;
+            min-width: 36%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            flex: 1;
+            min-width: 36%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+    </style>
 </head>
 
 <body>
@@ -37,10 +74,12 @@
 
 <main>
     <div th:if="${session.user != null}">
-        <p>Welcome, <span th:text="${session.user.firstName}"></span>!</p>
-        <p>Here's where you can add a buddy's email address to send him money.</p>
-        <p>Fill out the form below and click on submit.</p>
 
+        <div class="intro-text">
+            <p>Welcome, <span th:text="${session.user.firstName}"></span>!</p>
+            <p>Here's where you can add a buddy's email address to send him money.</p>
+            <p>Fill out the form below and click on submit.</p>
+        </div>
         <form method="post" th:action="@{/addConnection}">
             <table class="table">
                 <tbody>
@@ -48,9 +87,14 @@
                     <td>Enter your buddy's email address</td>
                     <td><input type="email" name="email"/></td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="submit" class="cta-button">Submit</button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
-            <button type="submit" class="cta-button">Submit</button>
         </form>
     </div>
     <div th:if="${error}" class="error alert alert-danger text-center my-3">

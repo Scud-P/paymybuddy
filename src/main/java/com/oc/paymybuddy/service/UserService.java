@@ -18,22 +18,22 @@ public class UserService {
     @Autowired
     public UserRepository userRepository;
 
+    @Transactional
     public User saveUserWithBasicInfo(String firstName, String lastName, String email, String password) {
 
         if (!isValidUserInfo(firstName, lastName, email, password)) {
-            return null;
+            throw new IllegalArgumentException("Please fill out the form entirely");
         }
 
-        if (!userRepository.isAlreadyUsedEmail(email)) {
-            User user = new User();
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setPassword(password);
-            return userRepository.save(user);
+        if (userRepository.isAlreadyUsedEmail(email)) {
+            throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users");
         }
-        logger.error("A user with the email address {} already exists email addresses must be unique", email);
-        return null;
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPassword(password);
+        return userRepository.save(user);
     }
 
     public User findByEmail(String email) {
@@ -52,43 +52,32 @@ public class UserService {
     @Transactional
     public User modifyUserInfo(User modifiedUser) {
 
-        try {
-            User existingUser = userRepository.findById(modifiedUser.getUserId()).orElse(null);
+        User existingUser = userRepository.findById(modifiedUser.getUserId()).orElse(null);
 
-            if (existingUser == null) {
-                logger.info("User with ID {} not found in the database", modifiedUser.getUserId());
-                return null;
-            }
-
-            if (modifiedUser.getEmail() != null && !modifiedUser.getEmail().equals(existingUser.getEmail())) {
-                if (userRepository.isAlreadyUsedEmail(modifiedUser.getEmail())) {
-                    logger.warn("A user with the email address {} already exists email addresses must be unique", modifiedUser);
-                    throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users ("+modifiedUser.getEmail()+")");
-                }
-                existingUser.setEmail(modifiedUser.getEmail());
-            }
-
-            if (modifiedUser.getFirstName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
-                existingUser.setFirstName(modifiedUser.getFirstName());
-            }
-            if (modifiedUser.getLastName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
-                existingUser.setLastName(modifiedUser.getLastName());
-            }
-            if (modifiedUser.getPassword() != null && !modifiedUser.getPassword().equals(existingUser.getPassword())) {
-                existingUser.setPassword(modifiedUser.getPassword());
-            }
-            logger.info("Profile modified to {} {} {}", existingUser.getFirstName(), existingUser.getLastName(), existingUser.getEmail());
-            userRepository.saveAndFlush(existingUser);
-            return existingUser;
-
-        } catch (IllegalArgumentException e) {
-            logger.error("An IllegalArgumentException occurred during transaction processing: {}", e.getMessage());
-            throw e;
-
-        } catch (Exception e) {
-            logger.error("An error occurred during transaction processing: {}", e.getMessage());
-            throw e;
+        if (existingUser == null) {
+            logger.info("User with ID {} not found in the database", modifiedUser.getUserId());
+            return null;
         }
+        if (modifiedUser.getEmail() != null && !modifiedUser.getEmail().equals(existingUser.getEmail())) {
+            if (userRepository.isAlreadyUsedEmail(modifiedUser.getEmail())) {
+                logger.warn("A user with the email address {} already exists email addresses must be unique", modifiedUser);
+                throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users (" + modifiedUser.getEmail() + ")");
+            }
+            existingUser.setEmail(modifiedUser.getEmail());
+        }
+
+        if (modifiedUser.getFirstName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
+            existingUser.setFirstName(modifiedUser.getFirstName());
+        }
+        if (modifiedUser.getLastName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
+            existingUser.setLastName(modifiedUser.getLastName());
+        }
+        if (modifiedUser.getPassword() != null && !modifiedUser.getPassword().equals(existingUser.getPassword())) {
+            existingUser.setPassword(modifiedUser.getPassword());
+        }
+        logger.info("Profile modified to {} {} {}", existingUser.getFirstName(), existingUser.getLastName(), existingUser.getEmail());
+        userRepository.saveAndFlush(existingUser);
+        return existingUser;
     }
 
     @Transactional
@@ -155,7 +144,6 @@ public class UserService {
             logger.warn("Field for password can't be empty");
             return false;
         }
-
         return true;
     }
 

@@ -21,6 +21,15 @@ public class User {
     private String email;
     @Column(name = "password")
     private String password;
+
+    public User(String firstName, String lastName, String email, String password, double balance) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+    }
+
     @Column(name = "balance")
     private double balance;
 

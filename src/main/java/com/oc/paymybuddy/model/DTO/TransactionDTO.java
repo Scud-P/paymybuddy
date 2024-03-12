@@ -13,7 +13,7 @@ public class TransactionDTO {
 
     public TransactionDTO(Transaction transaction, User receiver) {
         this.connectionFirstName = receiver.getFirstName();
-        this.formattedAmount = transaction.getFormattedAmount() + "$";
+        this.formattedAmount = transaction.getFormattedAmount();
         if (transaction.getDescription() != null) {
             this.description = transaction.getDescription();
         } else {

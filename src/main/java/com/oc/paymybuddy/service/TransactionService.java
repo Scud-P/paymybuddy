@@ -4,7 +4,6 @@ import com.oc.paymybuddy.model.DTO.TransactionDTO;
 import com.oc.paymybuddy.model.Transaction;
 import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.repository.TransactionRepository;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

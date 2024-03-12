@@ -5,6 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Profile</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+        h3 {
+            color: #74D36A;
+            padding: 2px;
+            margin-bottom: 20px
+        }
+
+          .intro-text {
+            margin-top : 10px;
+            margin-left : 10px;
+            padding: 3px
+        }
+
+        .navbar-light .navbar-brand {
+            color: #74D36A;
+        }
+        .cta-button {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px;
+            margin-top: 20px;
+            flex: 1;
+            min-width: 36%
+        }
+
+        .cta-button:hover {
+            color: white;
+            background-color: #5cb85c;
+            border: 2px solid #5cb85c;
+            border-radius: 5px;
+            padding: 3px;
+            flex: 1;
+            min-width: 36%
+        }
+        .cta-button a {
+            color: white;
+            text-decoration: none
+        }
+  </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
@@ -14,7 +55,7 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto"> <!-- Use ml-auto to push items to the right -->
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
@@ -35,10 +76,11 @@
 </nav>
 
 <main>
-  <div th:if="${session.user != null}">
+  <div class="intro-text" th:if="${session.user != null}">
     <p>Welcome, <span th:text="${session.user.firstName}"></span>!</p>
     <p>Here's where you can transfer money to your PayMyBuddy account.</p>
     <p>Fill out the form below and click on purchase.</p>
+  </div>
 
     <form method="post" th:action="@{/finalizePurchase}">
     <table class="table">
@@ -52,11 +94,14 @@
         <td>How much credit do you want to purchase?</td>
         <td><input type="number" step="0.01" min="0" value="0.00" name="purchase"/></td>
       </tr>
+      <tr>
+        <td></td>
+        <td><button type="submit" class="cta-button">Purchase</button>
+        </td>
+      </tr>
       </tbody>
     </table>
-      <button type="submit" class="cta-button">Purchase</button>
     </form>
-  </div>
 </main>
 </body>
 </html>

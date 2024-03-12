@@ -1,7 +1,6 @@
 package com.oc.paymybuddy;
 
 import com.oc.paymybuddy.model.Partnership;
-import com.oc.paymybuddy.model.PartnershipID;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,15 +11,15 @@ public class PartnershipTest {
     @Test
     public void testEquals() {
 
-        PartnershipID partnershipID = new PartnershipID();
-        partnershipID.setSenderId(1);
-        partnershipID.setReceiverId(2);
-
         Partnership partnership = new Partnership();
-        partnership.setId(partnershipID);
+        partnership.setOwnerId(1);
+        partnership.setPartnerId(2);
+        partnership.setPartnershipId(1);
 
         Partnership partnership2 = new Partnership();
-        partnership2.setId(partnershipID);
+        partnership.setOwnerId(1);
+        partnership.setPartnerId(2);
+        partnership.setPartnershipId(1);
 
         assertEquals(partnership, partnership2);
 
@@ -29,18 +28,18 @@ public class PartnershipTest {
     @Test
     public void testHashCode() {
 
-        PartnershipID partnershipID = new PartnershipID();
-        partnershipID.setSenderId(1);
-        partnershipID.setReceiverId(2);
-
         Partnership partnership = new Partnership();
-        partnership.setId(partnershipID);
+        partnership.setOwnerId(1);
+        partnership.setPartnerId(2);
+        partnership.setPartnershipId(1);
 
         Partnership partnership2 = new Partnership();
-        partnership2.setId(partnershipID);
+        partnership.setOwnerId(1);
+        partnership.setPartnerId(2);
+        partnership.setPartnershipId(1);
+
+        assertEquals(partnership, partnership2);
 
         assertEquals(partnership.hashCode(), partnership2.hashCode());
-
     }
-
 }

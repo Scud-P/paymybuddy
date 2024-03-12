@@ -3,7 +3,6 @@ package com.oc.paymybuddy;
 import com.oc.paymybuddy.controller.TransactionController;
 import com.oc.paymybuddy.controller.UserController;
 import com.oc.paymybuddy.model.Partnership;
-import com.oc.paymybuddy.model.PartnershipID;
 import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.repository.PartnershipRepository;
 import com.oc.paymybuddy.repository.UserRepository;
@@ -68,22 +67,23 @@ public class PartnershipServiceTest {
         long senderId = 1;
 
         Partnership partnership1 = new Partnership();
-        PartnershipID partnershipID1 = new PartnershipID();
-        partnershipID1.setSenderId(senderId);
-        partnershipID1.setReceiverId(2);
-        partnership1.setId(partnershipID1);
+        partnership1.setOwnerId(1);
+        partnership1.setPartnerId(2);
+        partnership1.setPartnershipId(1);
+
 
         Partnership partnership2 = new Partnership();
-        PartnershipID partnershipID2 = new PartnershipID();
-        partnershipID2.setSenderId(senderId);
-        partnershipID2.setReceiverId(3);
-        partnership2.setId(partnershipID2);
+        partnership2.setOwnerId(1);
+        partnership2.setPartnerId(3);
+        partnership2.setPartnershipId(2);
+
+
 
         List<Partnership> partnerships = new ArrayList<>();
         partnerships.add(partnership1);
         partnerships.add(partnership2);
 
-        when(partnershipRepository.findByIdSenderUserId(senderId)).thenReturn(partnerships);
+        when(partnershipRepository.findByOwnerId(senderId)).thenReturn(partnerships);
 
         List<String> emails = List.of("email1", "email2");
         List<Long> receiverIds = List.of(2L, 3L);
@@ -92,7 +92,7 @@ public class PartnershipServiceTest {
 
         List<String> result = partnershipService.getEmailsFromPartners(senderId);
 
-        verify(partnershipRepository).findByIdSenderUserId(senderId);
+        verify(partnershipRepository).findByOwnerId(senderId);
         verify(userRepository).findEmailsByIds(receiverIds);
 
         assertEquals(emails, result);
