@@ -87,10 +87,18 @@ public class UserController {
     @PostMapping("/finalizePurchase")
     public String buyCredit(
             @RequestParam(value = "purchase") Double purchase,
-            HttpSession session) {
-        User currentUser = (User) session.getAttribute("user");
-        userService.buyCredit(currentUser, purchase);
-        return "redirect:/profile";
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        try {
+            User currentUser = (User) session.getAttribute("user");
+            userService.buyCredit(currentUser, purchase);
+            return "redirect:/profile";
+
+        } catch(IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            logger.error("IllegalArgumentException occurred: {}", e.getMessage());
+            return "redirect:/buyCredit";
+        }
     }
 
     @PostMapping("/addConnection")

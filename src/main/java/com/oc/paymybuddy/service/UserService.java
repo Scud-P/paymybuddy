@@ -83,6 +83,11 @@ public class UserService {
     @Transactional
     public User buyCredit(User user, double purchasedCredit) {
         User existingUser = userRepository.findById(user.getUserId()).orElse(null);
+
+        if (purchasedCredit == 0) {
+            throw new IllegalArgumentException("Please enter an amount superior to 0");
+        }
+
         if (existingUser != null) {
             logger.info("User {} {} found in DB", existingUser.getFirstName(), existingUser.getLastName());
             double currentBalance = user.getBalance();

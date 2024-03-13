@@ -16,23 +16,41 @@
         .navbar-light .navbar-brand {
             color: #74D36A;
         }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 30px;
+        }
+
+        .pagination-link {
+            color: white;
+            background-color: #74D36A;
+            border: 2px solid #74D36A;
+            border-radius: 5px;
+            padding: 3px 10px;
+        }
+
+        .pagination-link:hover {
+            text-decoration: none;
+            background-color: #5cb85c;
+            border-color: #5cb85c;
+            color: white;
+        }
+
         .cta-button {
             color: white;
             background-color: #74D36A;
             border: 2px solid #74D36A;
             border-radius: 5px;
-            padding: 3px;
-            margin-top: 10px;
-            min-width: 10%
+            min-width: 10%;
         }
 
-        .cta-button:hover {
-            color: white;
+        .cta-button:hover
+        {
             background-color: #5cb85c;
-            border: 2px solid #5cb85c;
-            border-radius: 5px;
-            padding: 3px;
-            min-width: 10%
+            border-color: #5cb85c;
         }
         .cta-button a {
             color: white;
@@ -43,18 +61,19 @@
             background-color: #74D36A;
             color: white;
             text-align: center;
+        }
 
-        .table-striped th,
-        .table-striped td {
+        .table-striped tbody td {
             text-align: center;
         }
+
 
     </style>
 
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-end">
-    <a class="navbar-brand" href="#">PayMyBuddy</a>
+    <a class="navbar-brand" th:href="@{/index}">PayMyBuddy</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -75,7 +94,7 @@
                 <a class="nav-link" th:href="@{/contact}">Contact</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/login}">Log In</a>
+                <a class="nav-link" th:href="@{/logout}">Log Out</a>
             </li>
         </ul>
     </div>
@@ -84,9 +103,9 @@
 <div class="band"></div>
 
 <div class="transferPanel p-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
         <h2>Send Money</h2>
-        <button class="cta-button"><a th:href="@{/connections}"> Add connection</a></button>
+        <button class="cta-button"><a th:href="@{/connections}"> Add Connection</a></button>
     </div>
     <form action="/submitTransaction" method="post">
         <select class="dropdown" name="selectedEmail">
@@ -94,7 +113,9 @@
             <option th:each="email : ${emails}" th:value="${email}" th:text="${email}">No connection found!</option>
         </select>
         <input type="number" class="monetaryInput" step="0.01" placeholder="Enter amount in $" name="amount">
-        <div class="form-group row p-3">
+            &nbsp; &nbsp;Your current balance is:&nbsp;<span th:text="${currentFormattedBalance}"></span>&nbsp;&nbsp;
+        <button class="cta-button"><a th:href="@{/buyCredit}"> Buy Credit</a></button>
+        <div class="form-group row mt-3 ml-0">
             <input type="text" class="form-control col-7" placeholder="Describe the reason for this transfer"
                    name="description">
         </div>
@@ -107,7 +128,7 @@
 </div>
 
 
-<div class="sendMoney p-3">
+<div class="sendMoney ml-3">
     <h2>My Transactions</h2>
 </div>
 
@@ -127,53 +148,11 @@
             <td th:text="${transaction.formattedAmount}"></td>
         </tbody>
     </table>
-    <ul class="pagination">
-        <li th:if="${currentPage > 0}">
-            <a th:href="@{/transfer(page=0)}">&laquo;&laquo;</a>
-        </li>
-        <th:block th:if="${totalPages > 0}">
-            <th:block th:if="${totalPages <= 5}">
-                <th:block th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
-                    <li th:class="${pageNumber == currentPage ? 'active' : ''}">
-                        <a th:href="@{/transfer(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
-                    </li>
-                </th:block>
-            </th:block>
-            <th:block th:if="${totalPages > 5}">
-                <li th:class="${currentPage == 0 ? 'active' : ''}">
-                    <a th:href="@{/transfer(page=0)}" th:text="1"></a>
-                </li>
-                <li th:if="${currentPage > 2}">
-                    <span>...</span>
-                </li>
-                <th:block th:if="${currentPage <= 2}">
-                    <th:block th:each="pageNumber : ${#numbers.sequence(1, 4)}">
-                        <li th:class="${pageNumber == currentPage ? 'active' : ''}">
-                            <a th:href="@{/transfer(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
-                        </li>
-                    </th:block>
-                </th:block>
-                <th:block th:if="${currentPage > 2}">
-                    <th:block th:if="${currentPage < totalPages - 3}">
-                        <th:block th:each="pageNumber : ${#numbers.sequence(currentPage - 1, currentPage + 1)}">
-                            <li th:class="${pageNumber == currentPage ? 'active' : ''}">
-                                <a th:href="@{/transfer(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
-                            </li>
-                        </th:block>
-                    </th:block>
-                    <li th:if="${currentPage < totalPages - 4}">
-                        <span>...</span>
-                    </li>
-                </th:block>
-                <li th:class="${currentPage == totalPages - 1 ? 'active' : ''}">
-                    <a th:href="@{/transfer(page=${totalPages - 1})}" th:text="${totalPages}"></a>
-                </li>
-            </th:block>
-        </th:block>
-        <li th:if="${currentPage + 1 < totalPages}">
-            <a th:href="@{/transfer(page=${totalPages - 1})}">&raquo;&raquo;</a>
-        </li>
-    </ul>
+</div>
+
+<div class="pagination-container">
+    <a class="pagination-link" th:if="${currentPage != 0}"th:href="@{/transfer(page=${currentPage - 1})}">Previous page</a>
+    <a class="pagination-link" th:if="${totalPages > 1}" th:href="@{/transfer(page=${currentPage + 1})}">Next page</a>
 </div>
 
 <footer>

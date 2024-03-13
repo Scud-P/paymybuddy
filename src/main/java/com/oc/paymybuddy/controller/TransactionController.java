@@ -58,6 +58,7 @@ public class TransactionController {
         ModelAndView modelAndView = new ModelAndView("transfer");
         modelAndView.addObject("emails", emails);
         modelAndView.addObject("currentUser", currentUser);
+        modelAndView.addObject("currentFormattedBalance", currentUser.getFormattedBalance());
         modelAndView.addObject("transactions", transactionPage.getContent());
         modelAndView.addObject("currentPage", transactionPage.getNumber());
         modelAndView.addObject("totalPages", transactionPage.getTotalPages());

@@ -34,7 +34,7 @@
       <li class="nav-item" th:if="${session.user != null}">
         <a class="nav-link" th:href="@{/transfer}">Transfer</a>
       </li>
-      <li class="nav-item active" th:if="${session.user != null}">
+      <li class="nav-item" th:if="${session.user != null}">
         <a class="nav-link" th:href="@{/profile}">Profile</a>
       </li>
       <li class="nav-item active" th:if="${session.user == null}" style="display: none;">
@@ -60,6 +60,13 @@
   <div th:if="${session.user != null}">
     <div class="intro-text">
       <p>Hi <span th:text="${session.user.firstName}"></span>!</p>
+      <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
+      <p>We will get back to you as soon as possible.</p>
+    </div>
+  </div>
+  <div th:if="${session.user == null}">
+    <div class="intro-text">
+      <p>Hi !</p>
       <p>If you need to contact us, you can write an email to <a href="info@paymybuddy.com">info@paymybuddy.com</a></p>
       <p>We will get back to you as soon as possible.</p>
     </div>
