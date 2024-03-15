@@ -16,12 +16,12 @@ public class Transaction {
     private long transactionNumber;
 
     public void setFee(double fee) {
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         this.fee = Double.parseDouble(decimalFormat.format(fee));
     }
 
     public Transaction(Timestamp timestamp, double amount, double fee, String description, long senderUserId, long receiverUserId) {
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double roundedFee = Double.parseDouble(decimalFormat.format(fee));
 
         this.timestamp = timestamp;
@@ -55,7 +55,7 @@ public class Transaction {
     }
 
     public String getFormattedAmount() {
-        DecimalFormat decimalFormat = new DecimalFormat("#0.00");
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         return decimalFormat.format(amount) + "$";
     }
 }

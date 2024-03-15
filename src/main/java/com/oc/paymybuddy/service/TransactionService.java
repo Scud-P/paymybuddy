@@ -50,13 +50,14 @@ public class TransactionService {
             }
 
             if (!userService.hasSufficientBalance(senderUserId, amount)) {
-                logger.error("User with ID number {} does not have enough funds to initiate a transaction with amount {} $", senderUserId, amount);
-                throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + amount + "$");
+                String formattedAmount = decimalFormat.format(amount);
+                logger.error("User with ID number {} does not have enough funds to initiate a transaction with amount {} $", senderUserId, formattedAmount);
+                throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + formattedAmount + "$");
             }
 
             if (!userService.hasSufficientBalance(senderUserId, totalRoundedAmount)) {
                 logger.error("User with ID number {} does not have enough funds to initiate a transaction with amount {} $" +
-                        " since the fee for this transaction is {} $", senderUserId, amount, roundedFee);
+                        " since the fee for this transaction is {} $", senderUserId, roundedAmount, roundedFee);
                 String formattedAmount = decimalFormat.format(roundedAmount);
                 String formattedFee = decimalFormat.format(roundedFee);
                 throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + formattedAmount + "$" + " since our transfer fee (0.5%) amounts to " + formattedFee + "$.");

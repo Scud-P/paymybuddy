@@ -66,8 +66,6 @@
         .table-striped tbody td {
             text-align: center;
         }
-
-
     </style>
 
 </head>
@@ -113,7 +111,7 @@
             <option th:each="email : ${emails}" th:value="${email}" th:text="${email}">No connection found!</option>
         </select>
         <input type="number" class="monetaryInput" step="0.01" placeholder="Enter amount in $" name="amount">
-            &nbsp; &nbsp;Your current balance is:&nbsp;<span th:text="${currentFormattedBalance}"></span>&nbsp;&nbsp;
+        &nbsp; &nbsp;Your current balance is:&nbsp;<span th:text="${currentFormattedBalance}"></span>&nbsp;&nbsp;
         <button class="cta-button"><a th:href="@{/buyCredit}"> Buy Credit</a></button>
         <div class="form-group row mt-3 ml-0">
             <input type="text" class="form-control col-7" placeholder="Describe the reason for this transfer"
@@ -151,13 +149,9 @@
 </div>
 
 <div class="pagination-container">
-    <a class="pagination-link" th:if="${currentPage != 0}"th:href="@{/transfer(page=${currentPage - 1})}">Previous page</a>
+    <a class="pagination-link" th:if="${currentPage != 0}" th:href="@{/transfer(page=${currentPage - 1})}">Previous
+        page</a>
     <a class="pagination-link" th:if="${totalPages > 1}" th:href="@{/transfer(page=${currentPage + 1})}">Next page</a>
 </div>
-
-<footer>
-    <p>&copy; 2024 Pay My Buddy</p>
-</footer>
 </body>
-
 </html>
