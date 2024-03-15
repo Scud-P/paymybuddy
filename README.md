@@ -2,11 +2,11 @@
 
 ## Diagramme de classe UML
 
-![UML_Class_Diagram](https://github.com/Scud-P/paymybuddy/assets/129103727/bc150617-8d2e-4781-ae36-7855f63e9019)
+![ClassDiagram](https://github.com/Scud-P/paymybuddy/assets/129103727/9de8abce-308c-42b3-8254-b61b15ca7473)
 
 ## Modèle physique de données
 
-![Database](https://github.com/Scud-P/paymybuddy/assets/129103727/894664a5-cbc4-4bb5-8d70-527f24d44382)
+![Database](https://github.com/Scud-P/paymybuddy/assets/129103727/abd4d777-e3ad-4985-9857-fc90ef6721ae)
 
 ## Script SQL de création de la base de donnée
 
@@ -51,13 +51,14 @@ CREATE TABLE `transaction` (
   `description` varchar(255) DEFAULT NULL,
   `sender_user_id` int(11) NOT NULL,
   `receiver_user_id` int(11) NOT NULL,
+  `fee` double NOT NULL,
   PRIMARY KEY (`transaction_number`),
   KEY `transaction_ibfk_1` (`sender_user_id`),
   KEY `transaction_ibfk_2` (`receiver_user_id`),
   CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`receiver_user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-```
+
 ## Insertion de valeurs dans la base de données
 
 J'ai fais le choix de peupler les tables de ma base de données de manière programmatique dans la classe MockDBService mais vous trouverez les requêtes SQL ci-dessous.
