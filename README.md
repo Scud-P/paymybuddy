@@ -58,6 +58,7 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`receiver_user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
 
 ## Insertion de valeurs dans la base de données
 
