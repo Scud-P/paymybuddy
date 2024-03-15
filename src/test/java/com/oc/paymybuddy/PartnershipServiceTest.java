@@ -17,8 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(PartnershipService.class)
@@ -116,4 +115,41 @@ public class PartnershipServiceTest {
         verify(partnershipRepository, times(1)).save(any(Partnership.class));
     }
 
+    @Test
+    public void testAddPartnershipPartnerNotFound() {
+
+        String partnerEmail = "email";
+
+        User currentUser = new User();
+        currentUser.setUserId(1L);
+
+        when(userRepository.findByEmail(partnerEmail)).thenReturn(null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            partnershipService.addPartnership(1L, partnerEmail);
+        });
+    }
+
+    @Test
+    public void testAddPartnershipPartnerAlreadyInList() {
+
+        String partnerEmail = "email";
+
+        User currentUser = new User();
+        currentUser.setUserId(1L);
+
+        User partner = new User();
+        currentUser.setUserId(2L);
+
+        List<String> partnerEmails = List.of(
+                partnerEmail
+        );
+
+        when(userRepository.findByEmail(partnerEmail)).thenReturn(partner);
+        when(partnershipService.getEmailsFromPartners(1L)).thenReturn(partnerEmails);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            partnershipService.addPartnership(1L, partnerEmail);
+        });
+    }
 }

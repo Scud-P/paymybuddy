@@ -1,6 +1,7 @@
 package com.oc.paymybuddy.service;
 
 import com.oc.paymybuddy.model.Partnership;
+import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.repository.PartnershipRepository;
 import com.oc.paymybuddy.repository.UserRepository;
 import org.slf4j.Logger;
@@ -30,9 +31,9 @@ public class PartnershipService {
     @Transactional
     public Partnership addPartnership(long userId, String partnerEmail) {
 
-        Long partnerId = userRepository.findIdByEmail(partnerEmail);
+        User partner = userRepository.findByEmail(partnerEmail);
 
-        if(partnerId == null) {
+        if(partner == null) {
             logger.warn("The email address {} does not belong to one of our users", partnerEmail);
             throw new IllegalArgumentException("The email address " + partnerEmail + " does not belong to one of our users.");
         }
@@ -40,15 +41,16 @@ public class PartnershipService {
         List<String> partnerEmails = getEmailsFromPartners(userId);
 
         if(partnerEmails.contains(partnerEmail)) {
-            logger.warn("User with ID {} and email {} is already a connection of user with userId {} ", partnerId, partnerEmail, userId);
+            logger.warn("User with email {} is already a connection of user with userId {} ", partnerEmail, userId);
             throw new IllegalArgumentException("The person you are trying to add " + "(" + partnerEmail + ") is already in your buddies list");
         }
 
+
         Partnership partnership = new Partnership();
         partnership.setOwnerId(userId);
-        partnership.setPartnerId(partnerId);
+        partnership.setPartnerId(partner.getUserId());
 
-        logger.info("User with userID {} added partner with userID {}", userId, partnerId);
+        logger.info("User with userID {} added partner with userID {}", userId, partner.getUserId());
         return partnershipRepository.save(partnership);
     }
 

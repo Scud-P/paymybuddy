@@ -9,6 +9,11 @@ import java.text.DecimalFormat;
 @Table(name="users")
 @Data
 public class User {
+    public void setBalance(double balance) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        this.balance = Double.parseDouble(decimalFormat.format(balance));
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

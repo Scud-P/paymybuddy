@@ -71,7 +71,7 @@ public class WebControllerTest {
 
     @Test
     public void testGetBuyCredit() throws Exception {
-        mockMvc.perform(get("/buyCredit"))
+        mockMvc.perform(get("/buycredit"))
                 .andExpect(status().isOk());
     }
 

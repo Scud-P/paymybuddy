@@ -17,9 +17,9 @@ public class PartnershipTest {
         partnership.setPartnershipId(1);
 
         Partnership partnership2 = new Partnership();
-        partnership.setOwnerId(1);
-        partnership.setPartnerId(2);
-        partnership.setPartnershipId(1);
+        partnership2.setOwnerId(1);
+        partnership2.setPartnerId(2);
+        partnership2.setPartnershipId(1);
 
         assertEquals(partnership, partnership2);
 
@@ -34,9 +34,9 @@ public class PartnershipTest {
         partnership.setPartnershipId(1);
 
         Partnership partnership2 = new Partnership();
-        partnership.setOwnerId(1);
-        partnership.setPartnerId(2);
-        partnership.setPartnershipId(1);
+        partnership2.setOwnerId(1);
+        partnership2.setPartnerId(2);
+        partnership2.setPartnershipId(1);
 
         assertEquals(partnership, partnership2);
 

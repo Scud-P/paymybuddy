@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,12 @@ public class TransactionService {
 
     @Transactional
     public Transaction submitTransaction(long senderUserId, String partnerEmail, double amount, String description) {
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        double roundedAmount = Double.parseDouble(decimalFormat.format(amount));
+        double roundedFee = Double.parseDouble(decimalFormat.format(amount*0.005));
+        double totalRoundedAmount = roundedAmount + roundedFee;
+
         try {
             User receiver = userService.findByEmail(partnerEmail);
 
@@ -47,7 +54,15 @@ public class TransactionService {
                 throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + amount + "$");
             }
 
-            userService.setSenderBalance(senderUserId, amount);
+            if (!userService.hasSufficientBalance(senderUserId, totalRoundedAmount)) {
+                logger.error("User with ID number {} does not have enough funds to initiate a transaction with amount {} $" +
+                        " since the fee for this transaction is {} $", senderUserId, amount, roundedFee);
+                String formattedAmount = decimalFormat.format(roundedAmount);
+                String formattedFee = decimalFormat.format(roundedFee);
+                throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + formattedAmount + "$" + " since our transfer fee (0.5%) amounts to " + formattedFee + "$.");
+            }
+
+            userService.setSenderBalance(senderUserId, totalRoundedAmount);
             userService.setReceiverBalance(receiver, amount);
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -55,6 +70,7 @@ public class TransactionService {
             transaction.setSenderUserId(senderUserId);
             transaction.setReceiverUserId(receiver.getUserId());
             transaction.setTimestamp(timestamp);
+            transaction.setFee(roundedFee);
             transaction.setAmount(amount);
             transaction.setDescription(description);
             transactionRepository.save(transaction);

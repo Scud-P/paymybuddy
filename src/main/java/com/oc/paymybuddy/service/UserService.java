@@ -63,9 +63,7 @@ public class UserService {
                 logger.warn("A user with the email address {} already exists email addresses must be unique", modifiedUser);
                 throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users (" + modifiedUser.getEmail() + ")");
             }
-            existingUser.setEmail(modifiedUser.getEmail());
         }
-
         if (modifiedUser.getFirstName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
             existingUser.setFirstName(modifiedUser.getFirstName());
         }
@@ -129,7 +127,7 @@ public class UserService {
         return userRepository.findById(receiverUserId).orElse(null);
     }
 
-    private boolean isValidUserInfo(String firstName, String lastName, String email, String password) {
+    public boolean isValidUserInfo(String firstName, String lastName, String email, String password) {
         if (firstName == null || firstName.isEmpty()) {
             logger.warn("Field for first name can't be empty");
             return false;

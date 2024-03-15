@@ -136,7 +136,7 @@ public class UserControllerTest {
                         .param("email", "newEmail@example.com")
                         .param("password", "newPassword"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/profile"));
+                .andExpect(redirectedUrl("/login"));
     }
 
 

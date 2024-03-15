@@ -78,7 +78,7 @@ public class AuthenticationControllerTest {
                         .param("email", "bobross@gmail.com")
                         .param("password", "12345"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login?error=true"));
+                .andExpect(redirectedUrl("/login"));
     }
 
 }

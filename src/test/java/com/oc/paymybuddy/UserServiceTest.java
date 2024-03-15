@@ -5,7 +5,6 @@ import com.oc.paymybuddy.repository.UserRepository;
 import com.oc.paymybuddy.service.MockDBService;
 import com.oc.paymybuddy.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,23 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findByEmail() {
+    public void saveUserWithBasicInfoTestInvalidUserInfo() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.saveUserWithBasicInfo("", testUser.getLastName(), testUser.getEmail(), testUser.getPassword());
+        });
+    }
+
+    @Test
+    public void saveUserWithBasicInfoTestAlreadyUsedEmail() {
+        when(userRepository.isAlreadyUsedEmail(testUser.getEmail())).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.saveUserWithBasicInfo(testUser.getFirstName(), testUser.getLastName(), testUser.getEmail(), testUser.getPassword());
+        });
+    }
+
+    @Test
+    public void findByEmailTest() {
         String email = "bobross@gmail.com";
         when(userRepository.findByEmail(email)).thenReturn(testUser);
         User result = userService.findByEmail(email);
@@ -67,7 +82,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void modifyUserInfo() {
+    public void modifyUserInfoTest() {
 
         String modifiedFirstName = "John";
         String modifiedLastName = "Lennon";
@@ -88,7 +103,53 @@ public class UserServiceTest {
     }
 
     @Test
-    public void buyCredit() {
+    public void modifyUserInfoTestExistingUserNull() {
+
+        String modifiedFirstName = "John";
+        String modifiedLastName = "Lennon";
+        String modifiedEmail = "johnlennon@gmail.com";
+        String modifiedPassword = "23456";
+
+        User modifiedBobRoss = new User();
+        modifiedBobRoss.setUserId(1L); // Set user ID for modification
+        modifiedBobRoss.setFirstName(modifiedFirstName);
+        modifiedBobRoss.setLastName(modifiedLastName);
+        modifiedBobRoss.setEmail(modifiedEmail);
+        modifiedBobRoss.setPassword(modifiedPassword);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        User result = userService.modifyUserInfo(modifiedBobRoss);
+
+        assertNull(result);
+    }
+
+    @Test
+    public void modifyUserInfoTestAlreadyUsedEmail() {
+
+        String modifiedFirstName = "John";
+        String modifiedLastName = "Lennon";
+        String modifiedEmail = "johnlennon@gmail.com";
+        String modifiedPassword = "23456";
+
+        User modifiedBobRoss = new User();
+        modifiedBobRoss.setFirstName(modifiedFirstName);
+        modifiedBobRoss.setLastName(modifiedLastName);
+        modifiedBobRoss.setEmail(modifiedEmail);
+        modifiedBobRoss.setPassword(modifiedPassword);
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
+
+        when(userRepository.isAlreadyUsedEmail(modifiedEmail)).thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.modifyUserInfo(modifiedBobRoss);
+        });
+    }
+
+
+    @Test
+    public void buyCreditTest() {
         double purchasedCredit = 1000.50;
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
@@ -100,7 +161,19 @@ public class UserServiceTest {
     }
 
     @Test
-    public void setSenderBalance() {
+    public void buyCreditTestZeroDollarPurchase() {
+
+        double purchasedCredit = 0d;
+
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.buyCredit(testUser, purchasedCredit);
+        });
+    }
+
+    @Test
+    public void setSenderBalanceTest() {
 
         when(userRepository.findById(testUser.getUserId())).thenReturn(Optional.of(testUser));
 
@@ -122,7 +195,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void setReceiverBalance() {
+    public void setReceiverBalanceTest() {
 
         double initialBalance = 1000.0;
         double amount = 100.0;
@@ -138,7 +211,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void hasSufficientBalance() {
+    public void hasSufficientBalanceTest() {
 
         when(userRepository.findById(testUser.getUserId())).thenReturn(Optional.of(testUser));
 
@@ -152,7 +225,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findById() {
+    public void findByIdTest() {
 
         when(userRepository.findById(testUser.getUserId())).thenReturn(Optional.of(testUser));
 
@@ -160,6 +233,16 @@ public class UserServiceTest {
 
         verify(userRepository, times(1)).findById(testUser.getUserId());
         assertEquals(result, testUser);
+    }
+
+    @Test
+    public void isValidUserInfoTestInvalidUserInfo() {
+        assertFalse(userService.isValidUserInfo("", testUser.getLastName(), testUser.getEmail(), testUser.getPassword()));
+    }
+
+    @Test
+    public void isValidUserInfoTestValidUserInfo() {
+        assertTrue(userService.isValidUserInfo(testUser.getFirstName(), testUser.getLastName(), testUser.getEmail(), testUser.getPassword()));
     }
 
 }

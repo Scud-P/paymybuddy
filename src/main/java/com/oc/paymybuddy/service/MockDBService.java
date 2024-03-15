@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class MockDBService {
         logger.info("Mock database cleared successfully.");
         userRepository.resetAutoIncrement();
         transactionRepository.resetAutoIncrement();
+        partnershipRepository.resetAutoIncrement();
         logger.info("Auto incremented fields reset successfully");
     }
 
@@ -110,6 +112,15 @@ public class MockDBService {
         List<Timestamp> timestamps = new ArrayList<>();
         List<Transaction> mockTransactions = new ArrayList<>();
         double[] amounts = {5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+        double[] fees = new double[20];
+
+        for(int i = 0; i <amounts.length; i++) {
+            double fee = amounts[i] * 0.005;
+            DecimalFormat decimalFormat = new DecimalFormat("#.##");
+            double roundedFee = Double.parseDouble(decimalFormat.format(fee));
+            fees[i] = roundedFee;
+        }
+
         String[] descriptions = {"Beer", "Wine", "Pastis", "Rhum", "Ti Punch", "Margarita", "Negroni", "White Russian", "Bloody Caesar", "Champagne",
         "Pack of Smokes", "Pack of Beer", "Movie", "Bottle of Wine", "Bottle of Rum", "Bottle of Tequila", "Bottle of Cognac", "Bottle of Champagne",
         "Bottle of Whisky", "Slip Kangourou en Soie"};
@@ -127,7 +138,7 @@ public class MockDBService {
             }
         }
         for(int i = 0; i < timestamps.size(); i++) {
-            Transaction transaction = new Transaction(timestamps.get(i), amounts[i], descriptions[i], senderIds[i], receiverIds[i]);
+            Transaction transaction = new Transaction(timestamps.get(i), amounts[i], fees[i], descriptions[i], senderIds[i], receiverIds[i]);
             mockTransactions.add(transaction);
         }
         transactionRepository.saveAll(mockTransactions);
