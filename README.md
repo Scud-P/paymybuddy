@@ -1,4 +1,16 @@
-# Openclassrooms - Parcours de développeur d'applications Java  - Projet 6 
+# Openclassrooms - Parcours de développeur d'applications Java  - Projet 6
+
+## Galerie des fonctionnalités
+
+[Signup](https://imgur.com/a/dn5zhs2)
+
+[Login](https://imgur.com/a/tBLp5ii)
+
+[Profile](https://imgur.com/a/bhLSpyc)
+
+[Transfer](https://imgur.com/a/fEbwKu6)
+
+[Add a connection](https://imgur.com/a/fMmVtm4)
 
 ## Diagramme de classe UML
 
