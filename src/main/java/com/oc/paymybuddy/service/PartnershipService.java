@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PartnershipService {
@@ -63,6 +64,10 @@ public class PartnershipService {
                 .toList();
 
         return userRepository.findEmailsByIds(receiverIds);
+    }
+
+    public Optional<Partnership> getById(Long partnershipId) {
+        return partnershipRepository.findById(partnershipId);
     }
 
 }

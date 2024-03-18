@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -49,7 +50,7 @@ public class TransactionService {
                 throw new IllegalArgumentException("User with email address " + partnerEmail + " is not a partner of user with ID number " + senderUserId);
             }
 
-            if (!userService.hasSufficientBalance(senderUserId, amount)) {
+            if (!userService.hasSufficientBalance(senderUserId, roundedAmount)) {
                 String formattedAmount = decimalFormat.format(amount);
                 logger.error("User with ID number {} does not have enough funds to initiate a transaction with amount {} $", senderUserId, formattedAmount);
                 throw new IllegalArgumentException("Your balance is insufficient to initiate a transfer for " + formattedAmount + "$");
@@ -64,7 +65,7 @@ public class TransactionService {
             }
 
             userService.setSenderBalance(senderUserId, totalRoundedAmount);
-            userService.setReceiverBalance(receiver, amount);
+            userService.setReceiverBalance(receiver, roundedAmount);
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             Transaction transaction = new Transaction();
@@ -95,6 +96,10 @@ public class TransactionService {
             transactionDTOS.add(transactionDTO);
         }
         return new PageImpl<>(transactionDTOS, pageable, transactions.getTotalElements());
+    }
+
+    public Optional<Transaction> findTransactionById(long id) {
+        return transactionRepository.findById(id);
     }
 
 }

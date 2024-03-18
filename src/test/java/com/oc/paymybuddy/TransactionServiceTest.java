@@ -93,19 +93,25 @@ public class TransactionServiceTest {
     @Test
     public void testSubmitTransaction() {
 
-        long senderUserId = 1;
+        long senderID = 1L;
         String partnerEmail = "email";
         String description = "description";
-        double amount = 100;
+        double amount = 100.0;
 
         User receiver = new User();
         receiver.setEmail(partnerEmail);
-        receiver.setUserId(2);
+        receiver.setUserId(2L);
         receiver.setFirstName("John");
         receiver.setLastName("Lennon");
+        receiver.setBalance(0.0);
+        receiver.setPassword("12345");
 
         User sender = new User();
-        sender.setUserId(senderUserId);
+        sender.setUserId(senderID);
+        sender.setBalance(200);
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", sender);
 
         when(userService.findByEmail(partnerEmail)).thenReturn(receiver);
 
@@ -113,19 +119,21 @@ public class TransactionServiceTest {
 
         when(userService.hasSufficientBalance(anyLong(), anyDouble())).thenReturn(true);
 
-        Transaction result = transactionService.submitTransaction(senderUserId, receiver.getEmail(), amount, description);
+        Transaction result = transactionService.submitTransaction(senderID, receiver.getEmail(), amount, description);
 
         assertNotNull(result);
-        assertEquals(senderUserId, result.getSenderUserId());
+        assertEquals(senderID, result.getSenderUserId());
         assertEquals(receiver.getUserId(), result.getReceiverUserId());
         assertEquals(description, result.getDescription());
         assertEquals(amount, result.getAmount());
 
         verify(transactionRepository, times(1)).save(any(Transaction.class));
-        verify(userService, times(1)).setSenderBalance(senderUserId, amount);
-        verify(userService, times(1)).setReceiverBalance(receiver, amount);
-        verify(partnershipService, times(1)).isAPartner(senderUserId, partnerEmail);
-        verify(userService, times(1)).hasSufficientBalance(senderUserId, amount);
+
+        verify(userService, times(1)).setSenderBalance(1L, 100.5);
+        verify(userService, times(1)).setReceiverBalance(receiver, 100.0);
+        verify(partnershipService, times(1)).isAPartner(senderID, partnerEmail);
+        verify(userService, times(1)).hasSufficientBalance(senderID, 100);
+        verify(userService, times(1)).hasSufficientBalance(senderID, 100.5);
     }
 
     @Test
