@@ -2,6 +2,19 @@
 
 ## Solution choisie
 
+Architecture MVC
+
+Modèle consistant des entités persistantes du domaine (User, Transaction, Partnership).
+
+Vue
+
+Contrôleurs 
+
+Couche de services
+
+Repositories
+
+Base de données relationnelle 
 
 ### Langages de programmation
 
