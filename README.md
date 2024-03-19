@@ -2,7 +2,24 @@
 
 ## Solution choisie
 
+
+### Langages de programmation
+
+Backend: Java 18
+Frontend: HTML/CSS
+
+
 ### Stack technique
+
+Spring Boot
+Thymeleaf
+Maven
+MySQL
+Lombok
+JaCoCo
+Surefire
+Bootstrap
+
 
 ### Architecture
 
