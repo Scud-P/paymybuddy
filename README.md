@@ -1,5 +1,15 @@
 # Openclassrooms - Parcours de développeur d'applications Java  - Projet 6
 
+## Solution choisie
+
+### Stack technique
+
+### Architecture
+
+### Approche transactionnelle
+
+### Gestion des erreurs
+
 ## Galerie des fonctionnalités
 
 [Signup](https://imgur.com/a/dn5zhs2)
