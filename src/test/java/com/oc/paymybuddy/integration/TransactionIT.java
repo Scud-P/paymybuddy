@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,7 +70,7 @@ public class TransactionIT {
 
     @Test
     @Transactional
-    public void testSubmittingTransactionNotAPartner() {
+    public void testSubmitTransactionNotAPartner() {
 
         double transactionAmount = 50.0;
 
@@ -165,6 +166,35 @@ public class TransactionIT {
 
         assertEquals(owner.getUserId(), partnership.getOwnerId());
         assertEquals(partnerUserId, partnership.getPartnerId());
+    }
+
+    @Test
+    @Transactional
+    public void testAddPartnershipNotFoundPartner() {
+
+        String ownerEmail = "qui-gon@example.com";
+        String ownerFirstname = "Qui-Gon";
+        String ownerLastName = "Jinn";
+        String ownerPassword = "12345";
+
+        userService.saveUserWithBasicInfo(ownerFirstname, ownerLastName, ownerEmail, ownerPassword);
+
+        User owner = userService.findByEmail(ownerEmail);
+        long ownerUserId = owner.getUserId();
+
+        String partnerEmail = "obiwan@example.com";
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            partnershipService.addPartnership(ownerUserId, partnerEmail);
+
+        });
+
+        Optional<Partnership> savedPartnership = partnershipService.getById(31L);
+        assertFalse(savedPartnership.isPresent());
+
+        List<String> partnerEmails = partnershipService.getEmailsFromPartners(owner.getUserId());
+
+        assertEquals(0, partnerEmails.size());
     }
 }
 

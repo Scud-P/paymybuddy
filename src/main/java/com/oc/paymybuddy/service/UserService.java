@@ -50,28 +50,28 @@ public class UserService {
 
 
     @Transactional
-    public User modifyUserInfo(User modifiedUser) {
+    public User modifyUserInfo(User userToModify) {
 
-        User existingUser = userRepository.findById(modifiedUser.getUserId()).orElse(null);
+        User existingUser = userRepository.findById(userToModify.getUserId()).orElse(null);
 
         if (existingUser == null) {
-            logger.info("User with ID {} not found in the database", modifiedUser.getUserId());
+            logger.info("User with ID {} not found in the database", userToModify.getUserId());
             return null;
         }
-        if (modifiedUser.getEmail() != null && !modifiedUser.getEmail().equals(existingUser.getEmail())) {
-            if (userRepository.isAlreadyUsedEmail(modifiedUser.getEmail())) {
-                logger.warn("A user with the email address {} already exists email addresses must be unique", modifiedUser);
-                throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users (" + modifiedUser.getEmail() + ")");
+        if (userToModify.getEmail() != null && !userToModify.getEmail().equals(existingUser.getEmail())) {
+            if (userRepository.isAlreadyUsedEmail(userToModify.getEmail())) {
+                logger.warn("A user with the email address {} already exists email addresses must be unique", userToModify);
+                throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users (" + userToModify.getEmail() + ")");
             }
         }
-        if (modifiedUser.getFirstName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
-            existingUser.setFirstName(modifiedUser.getFirstName());
+        if (userToModify.getFirstName() != null && !userToModify.getFirstName().equals(existingUser.getFirstName())) {
+            existingUser.setFirstName(userToModify.getFirstName());
         }
-        if (modifiedUser.getLastName() != null && !modifiedUser.getFirstName().equals(existingUser.getFirstName())) {
-            existingUser.setLastName(modifiedUser.getLastName());
+        if (userToModify.getLastName() != null && !userToModify.getFirstName().equals(existingUser.getFirstName())) {
+            existingUser.setLastName(userToModify.getLastName());
         }
-        if (modifiedUser.getPassword() != null && !modifiedUser.getPassword().equals(existingUser.getPassword())) {
-            existingUser.setPassword(modifiedUser.getPassword());
+        if (userToModify.getPassword() != null && !userToModify.getPassword().equals(existingUser.getPassword())) {
+            existingUser.setPassword(userToModify.getPassword());
         }
         logger.info("Profile modified to {} {} {}", existingUser.getFirstName(), existingUser.getLastName(), existingUser.getEmail());
         userRepository.saveAndFlush(existingUser);
