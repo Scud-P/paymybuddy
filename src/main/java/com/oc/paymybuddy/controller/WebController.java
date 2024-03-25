@@ -1,5 +1,7 @@
 package com.oc.paymybuddy.controller;
 
+import com.oc.paymybuddy.model.User;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,11 @@ public class WebController {
     }
 
     @GetMapping("/profile")
-    public String getProfile() {
+    public String getProfile(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if(user == null) {
+            return "login";
+        }
         return "profile";
     }
 
@@ -43,12 +49,20 @@ public class WebController {
     }
 
     @GetMapping("/modifyInfo")
-    public String modifyInfo() {
+    public String modifyInfo(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if(user == null) {
+            return "login";
+        }
         return "modifyinfo";
     }
 
     @GetMapping("/buyCredit")
-    public String buyCredit() {
+    public String buyCredit(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if(user == null) {
+            return "login";
+        }
         return "buycredit";
     }
 

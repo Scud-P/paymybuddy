@@ -1,4 +1,4 @@
-package com.oc.paymybuddy.integration;
+package com.oc.paymybuddy;
 
 import com.oc.paymybuddy.model.Partnership;
 import com.oc.paymybuddy.model.Transaction;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-public class TransactionIT {
+public class TransactionIntegrationTest {
 
     @Autowired
     private TransactionService transactionService;

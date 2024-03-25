@@ -40,6 +40,7 @@ public class AuthenticationController {
             logger.info("User {} is now logged in", user);
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getUserId());
+            session.setAttribute("formattedBalance", user.getFormattedBalance());
             return "redirect:/profile";
         }
         redirectAttributes.addFlashAttribute("error", "Incorrect password");

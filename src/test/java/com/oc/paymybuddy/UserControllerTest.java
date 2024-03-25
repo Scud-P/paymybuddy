@@ -139,6 +139,54 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/login"));
     }
 
+    @Test
+    public void testModifyUserInfoFirstNameEmpty() throws Exception {
+
+        mockMvc.perform(post("/submitNewInfo")
+                        .param("firstName", "")
+                        .param("lastName", "Doe")
+                        .param("email", "newEmail@example.com")
+                        .param("password", "newPassword"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/modifyInfo"));
+    }
+
+    @Test
+    public void testModifyUserInfoLastNameEmpty() throws Exception {
+
+        mockMvc.perform(post("/submitNewInfo")
+                        .param("firstName", "John")
+                        .param("lastName", "")
+                        .param("email", "newEmail@example.com")
+                        .param("password", "newPassword"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/modifyInfo"));
+    }
+
+    @Test
+    public void testModifyUserInfoEmailEmpty() throws Exception {
+
+        mockMvc.perform(post("/submitNewInfo")
+                        .param("firstName", "John")
+                        .param("lastName", "Doe")
+                        .param("email", "")
+                        .param("password", "newPassword"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/modifyInfo"));
+    }
+
+    @Test
+    public void testModifyUserInfoPasswordEmpty() throws Exception {
+
+        mockMvc.perform(post("/submitNewInfo")
+                        .param("firstName", "John")
+                        .param("lastName", "Doe")
+                        .param("email", "newEmail@example.com")
+                        .param("password", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/modifyInfo"));
+    }
+
 
     @Test
     public void testFinalizePurchase() throws Exception {
@@ -180,7 +228,7 @@ public class UserControllerTest {
         when(partnershipService.addPartnership(2L, email)).thenReturn(partnership);
 
 
-        mockMvc.perform(post("/addConnection").session(session)
+        mockMvc.perform(post("/addPartnership").session(session)
                         .param("email", email))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/transfer"));

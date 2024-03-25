@@ -5,6 +5,7 @@ import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.service.PartnershipService;
 import com.oc.paymybuddy.service.TransactionService;
 import com.oc.paymybuddy.service.UserService;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +70,20 @@ public class TransactionController {
     @PostMapping("/submitTransaction")
     public String submitTransaction(
             HttpSession session,
-            @RequestParam(value = "selectedEmail") String email,
-            @RequestParam(value = "amount") Double amount,
+            @RequestParam(value = "selectedEmail", required = false) String email,
+            @RequestParam(value = "amount", required = false) Double amount,
             @RequestParam(value = "description") String description,
             RedirectAttributes redirectAttributes) {
+
+        if (email == null || email.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Please select an email in the dropdown list.");
+            return "redirect:/transfer";
+        }
+
+        if (amount == null) {
+            redirectAttributes.addFlashAttribute("error", "Please provide an amount in the corresponding field.");
+            return "redirect:/transfer";
+        }
 
         try {
             long userId = (long) session.getAttribute("userId");

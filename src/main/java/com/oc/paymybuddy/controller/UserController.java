@@ -58,19 +58,39 @@ public class UserController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
+        if(firstName == null || firstName.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "First Name can't be empty");
+            return "redirect:/modifyInfo";
+        }
+
+        if(lastName == null || lastName.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Last Name can't be empty");
+            return "redirect:/modifyInfo";
+        }
+
+        if(email == null || email.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Email can't be empty");
+            return "redirect:/modifyInfo";
+        }
+
+        if(password == null || password.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Password can't be empty");
+            return "redirect:/modifyInfo";
+        }
+
         try {
             User currentUser = (User) session.getAttribute("user");
             if (currentUser != null) {
-                if (firstName != null && !firstName.equals(currentUser.getFirstName())) {
+                if (!firstName.equals(currentUser.getFirstName())) {
                     currentUser.setFirstName(firstName);
                 }
-                if (lastName != null && !lastName.equals(currentUser.getLastName())) {
+                if (!lastName.equals(currentUser.getLastName())) {
                     currentUser.setLastName(lastName);
                 }
-                if (email != null && !email.equals(currentUser.getEmail())) {
+                if (!email.equals(currentUser.getEmail())) {
                     currentUser.setEmail(email);
                 }
-                if (password != null && !password.equals(currentUser.getPassword())) {
+                if (!password.equals(currentUser.getPassword())) {
                     currentUser.setPassword(password);
                 }
                 userService.modifyUserInfo(currentUser);
@@ -101,7 +121,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/addConnection")
+    @PostMapping("/addPartnership")
     public String addConnection(
             @RequestParam(value = "email") String email,
             HttpSession session,

@@ -60,14 +60,15 @@ public class UserService {
         }
         if (userToModify.getEmail() != null && !userToModify.getEmail().equals(existingUser.getEmail())) {
             if (userRepository.isAlreadyUsedEmail(userToModify.getEmail())) {
-                logger.warn("A user with the email address {} already exists email addresses must be unique", userToModify);
+                logger.warn("A user with the email address {} already exists. Email addresses must be unique", userToModify.getEmail());
                 throw new IllegalArgumentException("The email address you are trying to use already belongs to one of our users (" + userToModify.getEmail() + ")");
             }
+            existingUser.setEmail(userToModify.getEmail());
         }
         if (userToModify.getFirstName() != null && !userToModify.getFirstName().equals(existingUser.getFirstName())) {
             existingUser.setFirstName(userToModify.getFirstName());
         }
-        if (userToModify.getLastName() != null && !userToModify.getFirstName().equals(existingUser.getFirstName())) {
+        if (userToModify.getLastName() != null && !userToModify.getLastName().equals(existingUser.getLastName())) {
             existingUser.setLastName(userToModify.getLastName());
         }
         if (userToModify.getPassword() != null && !userToModify.getPassword().equals(existingUser.getPassword())) {
@@ -94,6 +95,7 @@ public class UserService {
             user.setBalance(newBalance);
             userRepository.save(user);
             logger.info("Balance for UserId{} after purchase: {}", user.getUserId(), user.getBalance());
+            logger.info("User {}", user);
             return user;
         } else {
             return null;

@@ -34,18 +34,17 @@ public class PartnershipService {
 
         User partner = userRepository.findByEmail(partnerEmail);
 
-        if(partner == null) {
+        if (partner == null) {
             logger.warn("The email address {} does not belong to one of our users", partnerEmail);
             throw new IllegalArgumentException("The email address " + partnerEmail + " does not belong to one of our users.");
         }
 
         List<String> partnerEmails = getEmailsFromPartners(userId);
 
-        if(partnerEmails.contains(partnerEmail)) {
+        if (partnerEmails.contains(partnerEmail)) {
             logger.warn("User with email {} is already a connection of user with userId {} ", partnerEmail, userId);
             throw new IllegalArgumentException("The person you are trying to add " + "(" + partnerEmail + ") is already in your buddies list");
         }
-
 
         Partnership partnership = new Partnership();
         partnership.setOwnerId(userId);

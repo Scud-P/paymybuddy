@@ -2,11 +2,13 @@ package com.oc.paymybuddy;
 
 
 import com.oc.paymybuddy.controller.WebController;
+import com.oc.paymybuddy.model.User;
 import com.oc.paymybuddy.service.MockDBService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -71,7 +73,11 @@ public class WebControllerTest {
 
     @Test
     public void testGetBuyCredit() throws Exception {
-        mockMvc.perform(get("/buycredit"))
+        User user = new User();
+        user.setBalance(0);
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", user);
+        mockMvc.perform(get("/buyCredit").session(session))
                 .andExpect(status().isOk());
     }
 
